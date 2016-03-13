@@ -1,0 +1,25 @@
+{
+  "name": "ddr_d3",
+  "version": "0.0.1",
+  "description": "Extensions for D3.js",
+  "keywords": [
+    "d3",
+    "visualization"
+  ],
+  "license": "Apache-2",
+  "author": {
+    "name": "Philip Washington Sorst",
+    "url": "https://sorst.net"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dontdrinkandroot/d3.dd3.js.git"
+  },
+  "scripts": {
+    "test": "faucet `find test -name '*-test.js'`"
+  },
+  "devDependencies": {
+    "faucet": "^0.0",
+    "tape": "^4"
+  }
+}
