@@ -1,11 +1,9 @@
-var exports = module.exports = {};
-
 /**
  * @param {number} x
  * @param {number} y
  * @constructor
  */
-exports.Point = function (x, y) {
+Point = function (x, y) {
 
     var _x = x;
     var _y = y;
@@ -33,3 +31,5 @@ exports.Point = function (x, y) {
         _y = y;
     };
 };
+
+var exports = module.exports = Point;
