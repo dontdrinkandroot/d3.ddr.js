@@ -5,10 +5,10 @@
     <title>Wordcloud Example</title>
     <link rel="stylesheet" href="style.css">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../../build/ddr-d3.js" charset="utf-8"></script>
 </head>
 <body>
     <script type="text/javascript">
-
         var words = [
             "Hello", "world", "normally", "you", "want", "more", "words",
             "than", "this"
@@ -18,7 +18,7 @@
                 size: 20 + Math.random() * 70
             };
         });
-
+        console.log(ddr_d3);
     </script>
 </body>
 </html>

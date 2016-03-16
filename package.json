@@ -16,7 +16,7 @@
     "url": "https://github.com/dontdrinkandroot/d3.ddr.js.git"
   },
   "scripts": {
-    "pretest": "rollup --format umd -n ddr_geometry -o build/ddr-geometry.js -- geometry.js",
+    "pretest": "rollup --format umd -n ddr_d3 -o build/ddr-d3.js -- index.js",
     "test": "faucet `find test -name '*-test.js'`"
   },
   "devDependencies": {

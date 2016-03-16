@@ -1,12 +1,12 @@
-import point from './point';
+import ddr_d3_geometry_point from './point';
 
-var rectangle = function (xOrP1, yOrP2, width, height) {
+var ddr_d3_geometry_rectangle = function (xOrP1, yOrP2, width, height) {
 
     var _p1, _p2;
 
     if (typeof xOrP1 === 'number' && typeof yOrP2 === 'number' && typeof width === 'number' && typeof height === 'number') {
-        _p1 = new point(xOrP1, yOrP2);
-        _p2 = new point(xOrP1 + width, yOrP2 + height);
+        _p1 = new ddr_d3_geometry_point(xOrP1, yOrP2);
+        _p2 = new ddr_d3_geometry_point(xOrP1 + width, yOrP2 + height);
     } else {
         _p1 = xOrP1;
         _p2 = yOrP2;
@@ -43,7 +43,7 @@ var rectangle = function (xOrP1, yOrP2, width, height) {
     };
 
     /**
-     * @param {Rectangle} other
+     * @param {ddr_d3_geometry_rectangle} other
      */
     this.merge = function (other) {
         _p1.setX(Math.min(_p1.getX(), other.getP1().getX()));
@@ -53,7 +53,7 @@ var rectangle = function (xOrP1, yOrP2, width, height) {
     };
 
     this.getCenter = function () {
-        return new point((this.getLeftX() + this.getRightX()) / 2, (this.getTopY() + this.getBottomY()) / 2);
+        return new ddr_d3_geometry_point((this.getLeftX() + this.getRightX()) / 2, (this.getTopY() + this.getBottomY()) / 2);
     };
 
     this.getP1 = function () {
@@ -104,8 +104,8 @@ var rectangle = function (xOrP1, yOrP2, width, height) {
         return _p2.getY() - _p1.getY();
     }
 };
-rectangle.prototype.toString = function () {
+ddr_d3_geometry_rectangle.prototype.toString = function () {
     return '[Rectangle x1=' + this.getLeftX() + ',y1=' + this.getTopY() + ',x2=' + this.getRightX() + ',y2=' + this.getBottomY() + ',w=' + this.getWidth() + ',h=' + this.getHeight() + ']';
 };
 
-export default rectangle;
+export default ddr_d3_geometry_rectangle;

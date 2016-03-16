@@ -1,4 +1,4 @@
-Ddr.Wordcloud = function (words) {
+var ddr_d3_layout_wordcloud = function (words) {
 
     /**
      * @param {Ddr.Space} space
@@ -209,3 +209,5 @@ Ddr.Wordcloud = function (words) {
 
     svg.attr('viewBox', overallBounds.getX() + ' ' + overallBounds.getY() + ' ' + overallBounds.getWidth() + ' ' + overallBounds.getHeight());
 };
+
+export default ddr_d3_layout_wordcloud;

@@ -3,7 +3,7 @@
  * @param {number} y
  * @constructor
  */
-var point = function (x, y) {
+var ddr_d3_geometry_point = function (x, y) {
 
     var _x = x;
     var _y = y;
@@ -32,4 +32,4 @@ var point = function (x, y) {
     };
 };
 
-export default point;
+export default ddr_d3_geometry_point;

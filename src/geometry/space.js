@@ -1,8 +1,8 @@
-import point from './point';
-import rectangle from './rectangle';
+import ddr_d3_geometry_point from './point';
+import ddr_d3_geometry_rectangle from './rectangle';
 
-var space = function (x, y, width, height) {
-    rectangle.call(this, x, y, width, height);
+var ddr_d3_geometry_space = function (x, y, width, height) {
+    ddr_d3_geometry_rectangle.call(this, x, y, width, height);
 
     this.getDistanceToOrigin = function () {
         return this.getDistanceToOtherPoint(new Point(0, 0));
@@ -29,10 +29,10 @@ var space = function (x, y, width, height) {
             y = this.getBottomY();
         }
 
-        return new point(x, y);
+        return new ddr_d3_geometry_point(x, y);
     };
 };
-space.prototype = Object.create(rectangle.prototype);
-space.prototype.constructor = space;
+ddr_d3_geometry_space.prototype = Object.create(ddr_d3_geometry_rectangle.prototype);
+ddr_d3_geometry_space.prototype.constructor = ddr_d3_geometry_space;
 
-export default space;
+export default ddr_d3_geometry_space;
