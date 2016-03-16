@@ -1,10 +1,10 @@
 var test = require("tape");
-var Rectangle = require('../../src/geometry/rectangle.js');
+var geometry = require("../../build/ddr-geometry");
 
 test('Rectangle.Construction', function (t) {
     var rect;
 
-    rect = new Rectangle(10, 20, 30, 40);
+    rect = new geometry.rectangle(10, 20, 30, 40);
     t.ok(rect.getLeftX(), 10);
     t.ok(rect.getRightX(), 40);
     t.ok(rect.getTopY(), 20);
@@ -12,7 +12,7 @@ test('Rectangle.Construction', function (t) {
     t.ok(rect.getWidth(), 30);
     t.ok(rect.getHeight(), 40);
 
-    rect = new Rectangle(new Point(10, 20), new Point(40, 60));
+    rect = new geometry.rectangle(new geometry.point(10, 20), new geometry.point(40, 60));
     t.ok(rect.getLeftX(), 10);
     t.ok(rect.getRightX(), 40);
     t.ok(rect.getTopY(), 20);
@@ -24,24 +24,24 @@ test('Rectangle.Construction', function (t) {
 });
 
 test('Rectangle.Area', function (t) {
-    var rect = new Rectangle(10, 20, 30, 40);
+    var rect = new geometry.rectangle(10, 20, 30, 40);
     t.equal(rect.getArea(), 1200);
     t.end();
 });
 
 test('Rectangle.Contains', function (t) {
     var rect, rect2;
-    rect = new Rectangle(10, 20, 30, 40);
+    rect = new geometry.rectangle(10, 20, 30, 40);
 
-    rect2 = new Rectangle(10, 20, 30, 40);
+    rect2 = new geometry.rectangle(10, 20, 30, 40);
     t.ok(rect.containsRectangle(rect2));
     t.ok(rect2.containsRectangle(rect));
 
-    rect2 = new Rectangle(0, 0, 20, 30);
+    rect2 = new geometry.rectangle(0, 0, 20, 30);
     t.notOk(rect.containsRectangle(rect2));
     t.notOk(rect2.containsRectangle(rect));
 
-    rect2 = new Rectangle(20, 30, 10, 20);
+    rect2 = new geometry.rectangle(20, 30, 10, 20);
     t.ok(rect.containsRectangle(rect2));
     t.notOk(rect2.containsRectangle(rect));
     t.end();
@@ -50,8 +50,8 @@ test('Rectangle.Contains', function (t) {
 test('Rectangle.Merge', function (t) {
     var rect1, rect2;
 
-    rect1 = new Rectangle(10, 20, 30, 40);
-    rect2 = new Rectangle(-10, -30, 20, 20);
+    rect1 = new geometry.rectangle(10, 20, 30, 40);
+    rect2 = new geometry.rectangle(-10, -30, 20, 20);
     rect1.merge(rect2);
     t.ok(rect1.getLeftX(), -10);
     t.ok(rect1.getRightX(), 40);
@@ -62,35 +62,35 @@ test('Rectangle.Merge', function (t) {
 
 test('Rectangle.Intersects', function (t) {
     var rect, rect2;
-    rect = new Rectangle(10, 20, 30, 40);
+    rect = new geometry.rectangle(10, 20, 30, 40);
 
     /* On left */
-    rect2 = new Rectangle(0, 20, 10, 40);
+    rect2 = new geometry.rectangle(0, 20, 10, 40);
     t.notOk(rect.intersectsRectangle(rect2));
     t.notOk(rect2.intersectsRectangle(rect));
 
     /* On bottom */
-    rect2 = new Rectangle(10, 0, 30, 20);
+    rect2 = new geometry.rectangle(10, 0, 30, 20);
     t.notOk(rect.intersectsRectangle(rect2));
     t.notOk(rect2.intersectsRectangle(rect));
 
     /* On right */
-    rect2 = new Rectangle(40, 20, 10, 40);
+    rect2 = new geometry.rectangle(40, 20, 10, 40);
     t.notOk(rect.intersectsRectangle(rect2));
     t.notOk(rect2.intersectsRectangle(rect));
 
     /* On top */
-    rect2 = new Rectangle(10, 60, 30, 10);
+    rect2 = new geometry.rectangle(10, 60, 30, 10);
     t.notOk(rect.intersectsRectangle(rect2));
     t.notOk(rect2.intersectsRectangle(rect));
 
     /* Intersects bottom left */
-    rect2 = new Rectangle(0, 0, 20, 30);
+    rect2 = new geometry.rectangle(0, 0, 20, 30);
     t.ok(rect.intersectsRectangle(rect2));
     t.ok(rect2.intersectsRectangle(rect));
 
     /* Intersects bottom */
-    rect2 = new Rectangle(20, 0, 10, 30);
+    rect2 = new geometry.rectangle(20, 0, 10, 30);
     t.ok(rect.intersectsRectangle(rect2));
     t.ok(rect2.intersectsRectangle(rect));
 

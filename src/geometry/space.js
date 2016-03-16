@@ -1,8 +1,8 @@
-var Rectangle = require('./rectangle.js');
-var Point = require('./point.js');
+import point from './point';
+import rectangle from './rectangle';
 
-var Space = function (x, y, width, height) {
-    Rectangle.call(this, x, y, width, height);
+var space = function (x, y, width, height) {
+    rectangle.call(this, x, y, width, height);
 
     this.getDistanceToOrigin = function () {
         return this.getDistanceToOtherPoint(new Point(0, 0));
@@ -29,10 +29,10 @@ var Space = function (x, y, width, height) {
             y = this.getBottomY();
         }
 
-        return new Point(x, y);
+        return new point(x, y);
     };
 };
-Space.prototype = Object.create(Rectangle.prototype);
-Space.prototype.constructor = Space;
+space.prototype = Object.create(rectangle.prototype);
+space.prototype.constructor = space;
 
-var exports = module.exports = Space;
+export default space;

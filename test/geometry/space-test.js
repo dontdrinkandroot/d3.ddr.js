@@ -1,12 +1,12 @@
 var test = require("tape");
-var Space = require('../../src/geometry/space.js');
+var geometry = require("../../build/ddr-geometry");
 
 test('Space.Inheritance', function (t) {
     var space;
 
-    space = new Space(1, 2, 3, 4);
-    t.ok(space instanceof Space);
-    t.ok(space instanceof Rectangle);
+    space = new geometry.space(1, 2, 3, 4);
+    t.ok(space instanceof geometry.space);
+    t.ok(space instanceof geometry.rectangle);
     t.ok(space.getY(), 2);
 
     t.end();

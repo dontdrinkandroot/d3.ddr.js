@@ -3,7 +3,7 @@
  * @param {number} y
  * @constructor
  */
-Point = function (x, y) {
+var point = function (x, y) {
 
     var _x = x;
     var _y = y;
@@ -32,4 +32,4 @@ Point = function (x, y) {
     };
 };
 
-var exports = module.exports = Point;
+export default point;

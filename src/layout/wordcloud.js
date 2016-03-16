@@ -209,11 +209,3 @@ Ddr.Wordcloud = function (words) {
 
     svg.attr('viewBox', overallBounds.getX() + ' ' + overallBounds.getY() + ' ' + overallBounds.getWidth() + ' ' + overallBounds.getHeight());
 };
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        'Rectangle': Ddr.Rectangle,
-        'Point': Ddr.Point,
-        'Space': Ddr.Space
-    };
-}
