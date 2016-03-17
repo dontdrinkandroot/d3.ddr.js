@@ -2,272 +2,290 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Wordcloud Example</title>
-  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <script src="../../build/ddr-d3.js" charset="utf-8"></script>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <title>Wordcloud Example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../../build/ddr-d3.js" charset="utf-8"></script>
 </head>
 <div id="cloud"></div>
 
 <body>
-  <script type="text/javascript">
+<script type="text/javascript">
     var topArtists = [{
-      name: "Nine Inch Nails",
-      playcount: "1557",
+        name: "Nine Inch Nails",
+        playcount: "1557",
     }, {
-      name: "Deftones",
-      playcount: "1198",
+        name: "Deftones",
+        playcount: "1198",
     }, {
-      name: "Tool",
-      playcount: "809",
+        name: "Tool",
+        playcount: "809",
     }, {
-      name: "The Prodigy",
-      playcount: "745",
+        name: "The Prodigy",
+        playcount: "745",
     }, {
-      name: "Blackmail",
-      playcount: "635",
+        name: "Blackmail",
+        playcount: "635",
     }, {
-      name: "Isis",
-      playcount: "585",
+        name: "Isis",
+        playcount: "585",
     }, {
-      name: "Schweisser",
-      playcount: "566",
+        name: "Schweisser",
+        playcount: "566",
     }, {
-      name: "Underworld",
-      playcount: "552",
+        name: "Underworld",
+        playcount: "552",
     }, {
-      name: "Nirvana",
-      playcount: "538",
+        name: "Nirvana",
+        playcount: "538",
     }, {
-      name: "Pascal FEOS",
-      playcount: "532",
+        name: "Pascal FEOS",
+        playcount: "532",
     }, {
-      name: "Karnivool",
-      playcount: "514",
+        name: "Karnivool",
+        playcount: "514",
     }, {
-      name: "Kyuss",
-      playcount: "501",
+        name: "Kyuss",
+        playcount: "501",
 
     }, {
-      name: "Radiohead",
-      playcount: "479",
+        name: "Radiohead",
+        playcount: "479",
     }, {
-      name: "dredg",
-      playcount: "474",
+        name: "dredg",
+        playcount: "474",
     }, {
-      name: "Queens of the Stone Age",
-      playcount: "383",
+        name: "Queens of the Stone Age",
+        playcount: "383",
     }, {
-      name: "Pearl Jam",
-      playcount: "382",
+        name: "Pearl Jam",
+        playcount: "382",
     }, {
-      name: "The Smashing Pumpkins",
-      playcount: "367",
+        name: "The Smashing Pumpkins",
+        playcount: "367",
     }, {
-      name: "Baroness",
-      playcount: "366",
+        name: "Baroness",
+        playcount: "366",
     }, {
-      name: "Blumfeld",
-      playcount: "364",
+        name: "Blumfeld",
+        playcount: "364",
     }, {
-      name: "The Chemical Brothers",
-      playcount: "359",
+        name: "The Chemical Brothers",
+        playcount: "359",
     }, {
-      name: "Cog",
-      playcount: "282",
+        name: "Cog",
+        playcount: "282",
     }, {
-      name: "Fehlfarben",
-      playcount: "276",
+        name: "Fehlfarben",
+        playcount: "276",
     }, {
-      name: "Madrugada",
-      playcount: "266",
+        name: "Madrugada",
+        playcount: "266",
     }, {
-      name: "Air",
-      playcount: "262",
+        name: "Air",
+        playcount: "262",
     }, {
-      name: "Massive Attack",
-      playcount: "258",
+        name: "Massive Attack",
+        playcount: "258",
     }, {
-      name: "The Notwist",
-      playcount: "256",
+        name: "The Notwist",
+        playcount: "256",
     }, {
-      name: "Korn",
-      playcount: "243",
+        name: "Korn",
+        playcount: "243",
     }, {
-      name: "Porcupine Tree",
-      playcount: "235",
+        name: "Porcupine Tree",
+        playcount: "235",
     }, {
-      name: "Cult of Luna",
-      playcount: "223",
+        name: "Cult of Luna",
+        playcount: "223",
     }, {
-      name: "Die Sterne",
-      playcount: "223",
+        name: "Die Sterne",
+        playcount: "223",
     }, {
-      name: "A Perfect Circle",
-      playcount: "220",
+        name: "A Perfect Circle",
+        playcount: "220",
     }, {
-      name: "Muse",
-      playcount: "218",
+        name: "Muse",
+        playcount: "218",
     }, {
-      name: "Oceansize",
-      playcount: "207",
+        name: "Oceansize",
+        playcount: "207",
     }, {
-      name: "Bad Religion",
-      playcount: "204",
+        name: "Bad Religion",
+        playcount: "204",
     }, {
-      name: "Orbital",
-      playcount: "201",
+        name: "Orbital",
+        playcount: "201",
     }, {
-      name: "Motörhead",
-      playcount: "194",
+        name: "Motörhead",
+        playcount: "194",
     }, {
-      name: "Johann Sebastian Bach",
-      playcount: "191",
+        name: "Johann Sebastian Bach",
+        playcount: "191",
     }, {
-      name: "Sparta",
-      playcount: "187",
+        name: "Sparta",
+        playcount: "187",
     }, {
-      name: "The Doors",
-      playcount: "187",
+        name: "The Doors",
+        playcount: "187",
     }, {
-      name: "Rage Against the Machine",
-      playcount: "186",
+        name: "Rage Against the Machine",
+        playcount: "186",
     }, {
-      name: "Dub War",
-      playcount: "182",
+        name: "Dub War",
+        playcount: "182",
     }, {
-      name: "Archive",
-      playcount: "178",
+        name: "Archive",
+        playcount: "178",
     }, {
-      name: "Portishead",
-      playcount: "177",
+        name: "Portishead",
+        playcount: "177",
     }, {
-      name: "The Offspring",
-      playcount: "177",
+        name: "The Offspring",
+        playcount: "177",
     }, {
-      name: "Mogwai",
-      playcount: "172",
+        name: "Mogwai",
+        playcount: "172",
     }, {
-      name: "Vast",
-      playcount: "169",
+        name: "Vast",
+        playcount: "169",
     }, {
-      name: "Tocotronic",
-      playcount: "167",
+        name: "Tocotronic",
+        playcount: "167",
     }, {
-      name: "The Crystal Method",
-      playcount: "164",
+        name: "The Crystal Method",
+        playcount: "164",
     }, {
-      name: "Apparat",
-      playcount: "160",
+        name: "Apparat",
+        playcount: "160",
     }, {
-      name: "Godsmack",
-      playcount: "155",
+        name: "Godsmack",
+        playcount: "155",
     }];
 
-    function text(d, i) {
-      return d.name.toUpperCase();
+    function renderWordCloud() {
+
+        function text(d, i) {
+            return d.name.toUpperCase();
+        }
+
+        function fontSize(d, i) {
+            return Math.sqrt(d.playcount) * 2;
+        }
+
+        function fontFamily(d, i) {
+            return '"Open Sans"';
+        }
+
+        function pxSize(d, i) {
+            return fontSize(d, i) + 'px';
+        }
+
+        var wordcloud = new ddr_d3.layout.Wordcloud();
+        wordcloud
+                .text(text)
+                .size(fontSize)
+                .weight("bold")
+                .family(fontFamily)
+                .draw(draw)
+                .layout(topArtists);
+
+        function draw(data) {
+            var svg = d3.select('#cloud').append('svg');
+            var container = svg.append('g');
+            container.selectAll("text")
+                    .data(data)
+                    .enter().append("text")
+                    .attr("x", function (d) {
+                        return d.boundingBox.getCenter().getX() - (d.originalBoundingBox.getWidth() / 2) - d.originalBoundingBox.getX();
+                    })
+                    .attr("y", function (d) {
+                        return d.boundingBox.getCenter().getY() - (d.originalBoundingBox.getHeight() / 2) - d.originalBoundingBox.getY();
+                    })
+                    .style('font-family', fontFamily)
+                    .style('font-size', pxSize)
+                    .style('font-weight', function (d) {
+                        return d.weight;
+                    })
+                    .style('fill', 'black')
+                    .attr('transform', function (d, i) {
+                        //console.log(d.text, d.originalBoundingBox.toString(), d.boundingBox.toString());
+
+                        if (i % 2 == 1) {
+                            return new ddr_d3.util.Transform().rotate(90, d.boundingBox.getCenter().getX(), d.boundingBox.getCenter().getY()).toString();
+                        } else {
+                            return "";
+                        }
+                    })
+                    .text(text);
+
+            /* Draw orignial bounding boxes */
+            /*var originalBB = container.append('g');
+             originalBB.selectAll("rect")
+             .data(data)
+             .enter().append("rect")
+             .attr("x", function(d) {
+             return d.originalBoundingBox.getX()
+             })
+             .attr("y", function(d) {
+             return d.originalBoundingBox.getY()
+             })
+             .attr("width", function(d) {
+             return d.originalBoundingBox.getWidth()
+             })
+             .attr("height", function(d) {
+             return d.originalBoundingBox.getHeight()
+             })
+             .style('fill', 'none')
+             .style('stroke', 'red');*/
+
+            /* Draw bounding boxes */
+            /*var newBB = container.append('g');
+             newBB.selectAll("rect")
+             .data(data)
+             .enter().append("rect")
+             .attr("x", function(d) {
+             return d.boundingBox.getX()
+             })
+             .attr("y", function(d) {
+             return d.boundingBox.getY()
+             })
+             .attr("width", function(d) {
+             return d.boundingBox.getWidth()
+             })
+             .attr("height", function(d) {
+             return d.boundingBox.getHeight()
+             })
+             .style('fill', 'none')
+             .style('stroke', 'green');*/
+
+            /* Draw center */
+            /*container.append('circle')
+             .attr('cx', 0)
+             .attr('cy', 0)
+             .attr('r', 5)
+             .attr('stroke', 'red');*/
+
+            var containerBounds = container.node().getBBox();
+            svg.attr('viewBox', containerBounds.x + ' ' + containerBounds.y + ' ' + containerBounds.width + ' ' + containerBounds.height);
+        }
     }
 
-    function size(d, i) {
-      return Math.sqrt(d.playcount) * 2;
-    }
-
-    function pxSize(d, i) {
-      return size(d,i) + 'px';
-    }
-
-    var wordcloud = new ddr_d3.layout.Wordcloud();
-    wordcloud
-      .text(text)
-      .size(size)
-      .weight("bold")
-      .family('"Open Sans"')
-      .draw(draw)
-      .layout(topArtists);
-
-    function draw(data) {
-      var svg = d3.select('#cloud').append('svg');
-      var container = svg.append('g');
-      container.selectAll("text")
-        .data(data)
-        .enter().append("text")
-        .attr("x", function(d) {
-          return d.boundingBox.getCenter().getX() - (d.originalBoundingBox.getWidth() / 2) - d.originalBoundingBox.getX();
-        })
-        .attr("y", function(d) {
-          return d.boundingBox.getCenter().getY() - (d.originalBoundingBox.getHeight() / 2) - d.originalBoundingBox.getY();
-        })
-        .style('font-family', function(d) {
-          return d.family;
-        })
-        .style('font-size', pxSize)
-        .style('font-weight', function(d) {
-          return d.weight;
-        })
-        .style('fill', 'black')
-        .attr('transform', function(d, i) {
-          //console.log(d.text, d.originalBoundingBox.toString(), d.boundingBox.toString());
-
-          if (i % 2 == 1) {
-            return new ddr_d3.util.Transform().rotate(90, d.boundingBox.getCenter().getX(), d.boundingBox.getCenter().getY()).toString();
-          } else {
-            return "";
-          }
-        })
-        .text(text);
-
-      /* Draw orignial bounding boxes */
-      /*var originalBB = container.append('g');
-      originalBB.selectAll("rect")
-        .data(data)
-        .enter().append("rect")
-        .attr("x", function(d) {
-          return d.originalBoundingBox.getX()
-        })
-        .attr("y", function(d) {
-          return d.originalBoundingBox.getY()
-        })
-        .attr("width", function(d) {
-          return d.originalBoundingBox.getWidth()
-        })
-        .attr("height", function(d) {
-          return d.originalBoundingBox.getHeight()
-        })
-        .style('fill', 'none')
-        .style('stroke', 'red');*/
-
-      /* Draw bounding boxes */
-      /*var newBB = container.append('g');
-      newBB.selectAll("rect")
-        .data(data)
-        .enter().append("rect")
-        .attr("x", function(d) {
-          return d.boundingBox.getX()
-        })
-        .attr("y", function(d) {
-          return d.boundingBox.getY()
-        })
-        .attr("width", function(d) {
-          return d.boundingBox.getWidth()
-        })
-        .attr("height", function(d) {
-          return d.boundingBox.getHeight()
-        })
-        .style('fill', 'none')
-        .style('stroke', 'green');*/
-
-      /* Draw center */
-      /*container.append('circle')
-        .attr('cx', 0)
-        .attr('cy', 0)
-        .attr('r', 5)
-        .attr('stroke', 'red');*/
-
-      var containerBounds = container.node().getBBox();
-      svg.attr('viewBox', containerBounds.x + ' ' + containerBounds.y + ' ' + containerBounds.width + ' ' + containerBounds.height);
-    }
-  </script>
+    $(function () {
+        WebFont.load({
+            google: {
+                families: ['Open Sans:400,700']
+            },
+            active: function () {
+                console.log('All fonts loaded');
+                renderWordCloud();
+            }
+        });
+    });
+</script>
 </body>
 
 </html>

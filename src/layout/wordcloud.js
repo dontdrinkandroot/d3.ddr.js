@@ -162,10 +162,10 @@ var ddr_d3_layout_wordcloud = function (words) {
             var minWidth = Number.MAX_VALUE;
             var word = data[i];
             word.originalBoundingBox = fontMetricsCalculator.getBoundingBoxFromCanvas(word.text, word.size + 'px', word.family, word.weight);
-            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth() + word.size / 4, word.originalBoundingBox.getHeight() + word.size / 8);
+            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth() + word.size / 2, word.originalBoundingBox.getHeight() + word.size / 4);
             if (i % 2 == 1) {
                 console.log('rotate');
-                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight() + word.size / 8, word.originalBoundingBox.getWidth() + word.size / 4);
+                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight() + word.size / 4, word.originalBoundingBox.getWidth() + word.size / 2);
             }
             minWidth = Math.min(minWidth, word.boundingBox.getWidth());
             minHeight = Math.min(minHeight, word.boundingBox.getHeight());

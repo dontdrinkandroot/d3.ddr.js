@@ -40,8 +40,8 @@
 
         var fontMetricsCalculator = new ddr_d3.util.FontMetricsCalculator();
         fontMetricsCalculator.setContext(context);
-        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FourtySixAndTwo', '40px', '"Open Sans"', 'bold').toString());
-        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FourtySixAndTwo', '100px', '"Open Sans"', 'bold').toString());
+        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FortySixAndTwo', '40px', '"Open Sans"', 'bold').toString());
+        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FortySixAndTwo', '100px', '"Open Sans"', 'bold').toString());
 
         return;
 
@@ -50,8 +50,8 @@
 
         context.fillStyle = "black";
         context.font = 'bold 40px "Open Sans"';
-        context.fillText("FourtySixAndTwo", 0, 0);
-        console.log(context.measureText("FourtySixAndTwo"));
+        context.fillText("FortySixAndTwo", 0, 0);
+        console.log(context.measureText("FortySixAndTwo"));
 
         var id = context.createImageData(1, 1);
         var d = id.data;
@@ -124,7 +124,7 @@
         context.strokeRect(minX - 200, minY - 200, maxX - minX, maxY - minY);
 
         var fontMetricsCalculator = new ddr_d3.util.FontMetricsCalculator();
-        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FourtySixAndTwo', '40px', '"Open Sans"', 'bold').toString());
+        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FortySixAndTwo', '40px', '"Open Sans"', 'bold').toString());
     });
 </script>
 </body>

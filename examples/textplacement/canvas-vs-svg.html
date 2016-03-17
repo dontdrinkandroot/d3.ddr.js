@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Text Placement</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../../build/ddr-d3.js" charset="utf-8"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+
+<h2>SVG</h2>
+<div id="svg-container">
+    <svg id="svg"></svg>
+</div>
+
+<h2>Canvas</h2>
+<div id="canvas-container">
+    <canvas id="canvas"></canvas>
+</div>
+
+<script type="text/javascript">
+
+    function draw() {
+        var fontFamily = 'Open Sans';
+
+        var fontMetricsCalculator = new ddr_d3.util.FontMetricsCalculator();
+
+        var canvasBounds10 = fontMetricsCalculator.getBoundingBoxFromCanvas('Ten', '10px', fontFamily, 'bold');
+        var canvasBounds20 = fontMetricsCalculator.getBoundingBoxFromCanvas('Twenty', '20px', fontFamily, 'bold');
+        var canvasBounds40 = fontMetricsCalculator.getBoundingBoxFromCanvas('Forty', '40px', fontFamily, 'bold');
+
+        var svgWidth = $('#svg-container').width();
+        var canvasWidth = $('#canvas-container').width();
+
+        var svg = d3.select('svg')
+                .attr('width', svgWidth)
+                .attr('height', 350);
+
+        svg.append('text')
+                .attr('x', 50)
+                .attr('y', 50)
+                .style('font-family', fontFamily)
+                .style('font-weight', 'bold')
+                .style('font-size', '10px')
+                .style('fill', 'black')
+                .text('Ten');
+
+        svg.append('text')
+                .attr('x', 50)
+                .attr('y', 150)
+                .style('font-family', fontFamily)
+                .style('font-weight', 'bold')
+                .style('font-size', '20px')
+                .style('fill', 'black')
+                .text('Twenty');
+
+        svg.append('text')
+                .attr('x', 50)
+                .attr('y', 250)
+                .style('font-family', fontFamily)
+                .style('font-weight', 'bold')
+                .style('font-size', '40px')
+                .style('fill', 'black')
+                .text('Forty');
+
+        var canvas = document.getElementById('canvas');
+        canvas.width = canvasWidth;
+        canvas.height = 350;
+
+        var context = canvas.getContext('2d');
+
+        context.translate(50, 50);
+
+        context.font = 'bold 10px ' + fontFamily;
+        context.fillStyle = 'black';
+        context.fillText('Ten', -canvasBounds10.getX(), -canvasBounds10.getY());
+        context.strokeStyle = 'red';
+        context.strokeRect(0, 0, canvasBounds10.getWidth(), canvasBounds10.getHeight());
+
+        context.translate(0, 100);
+
+        context.font = 'bold 20px ' + fontFamily;
+        context.fillStyle = 'black';
+        context.fillText('Twenty', -canvasBounds20.getX(), -canvasBounds20.getY());
+        context.strokeStyle = 'red';
+        context.strokeRect(0, 0, canvasBounds20.getWidth(), canvasBounds20.getHeight());
+
+        context.translate(0, 100);
+
+        context.font = 'bold 40px ' + fontFamily;
+        context.fillStyle = 'black';
+        context.fillText('Forty', -canvasBounds40.getX(), -canvasBounds40.getY());
+        context.strokeStyle = 'red';
+        context.strokeRect(0, 0, canvasBounds40.getWidth(), canvasBounds40.getHeight());
+    }
+
+
+
+    $(function () {
+
+
+        WebFont.load({
+            google: {
+                families: ['Open Sans']
+            },
+            active: function() {
+                console.log('All fonts loaded');
+                draw();
+            }
+        });
+
+
+    });
+</script>
+</body>
+
+</html>
