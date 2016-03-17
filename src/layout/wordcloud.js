@@ -1,6 +1,7 @@
 import ddr_d3_geometry_point from '../geometry/point';
 import ddr_d3_geometry_rectangle from '../geometry/rectangle';
 import ddr_d3_geometry_space from '../geometry/space';
+import ddr_d3_util_font_metrics_calculator from '../util/fontmetricscalculator';
 
 var ddr_d3_layout_wordcloud = function (words) {
 
@@ -149,31 +150,22 @@ var ddr_d3_layout_wordcloud = function (words) {
             d.text = wordText.call(this, d, i);
             return d;
         }).sort(function(a, b) { return b.size - a.size; });
-        console.log(data);
-
-        var drawingBox = d3.select('body').append('svg');
 
         /* Init spaces */
         var spaces = [];
         spaces.push(new ddr_d3_geometry_rectangle(-Number.MAX_VALUE / 2, -Number.MAX_VALUE / 2, Number.MAX_VALUE, Number.MAX_VALUE));
 
+        var fontMetricsCalculator = new ddr_d3_util_font_metrics_calculator();
+
         for (var i = 0; i < data.length; i++) {
             var minHeight = Number.MAX_VALUE;
             var minWidth = Number.MAX_VALUE;
             var word = data[i];
-            var wordElement = drawingBox.append("text")
-                .attr("x", 0)
-                .attr("y", 0)
-                .style('font-family', word.family)
-                .style('font-weight', word.weight)
-                .style('font-size', word.size + 'px')
-                .text(word.text);
-            var bbox = wordElement.node().getBBox();
-            word.originalBoundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, bbox.width, bbox.height);
-            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth(), word.originalBoundingBox.getHeight());
+            word.originalBoundingBox = fontMetricsCalculator.getBoundingBoxFromCanvas(word.text, word.size + 'px', word.family, word.weight);
+            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth() + word.size / 4, word.originalBoundingBox.getHeight() + word.size / 8);
             if (i % 2 == 1) {
                 console.log('rotate');
-                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight(), word.originalBoundingBox.getWidth());
+                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight() + word.size / 8, word.originalBoundingBox.getWidth() + word.size / 4);
             }
             minWidth = Math.min(minWidth, word.boundingBox.getWidth());
             minHeight = Math.min(minHeight, word.boundingBox.getHeight());
@@ -208,8 +200,6 @@ var ddr_d3_layout_wordcloud = function (words) {
                 return a.getDistanceToOrigin() - b.getDistanceToOrigin();
             });
         }
-
-        drawingBox.remove();
 
         var endDate = new Date();
         console.log('Layouting took ' + (endDate.getMilliseconds() - startDate.getMilliseconds()));

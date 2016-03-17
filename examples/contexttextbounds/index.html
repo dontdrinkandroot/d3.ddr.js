@@ -2,123 +2,131 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Context Textbounds</title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
-  <script src="https://code.jquery.com/jquery-2.2.1.min.js" charset="utf-8"></script>
-  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <script src="../../build/ddr-d3.js" charset="utf-8"></script>
-  <style type="text/css">
+    <meta charset="utf-8">
+    <title>Context Textbounds</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../../build/ddr-d3.js" charset="utf-8"></script>
+    <style type="text/css">
 
-  </style>
+    </style>
 </head>
 
 <body>
-  <canvas id="canvas" width="800" height="800" style="border:1px solid #000000;"></canvas>
-  <script type="text/javascript">
-    $(function() {
+<canvas id="canvas" width="1000" height="500" style="border:1px solid #000000;"></canvas>
+<script type="text/javascript">
+    $(function () {
 
-      function drawCircle(x, y, r, fill, stroke) {
-        context.beginPath();
-        context.arc(x, y, r, 0, 2 * Math.PI, false);
-        if (null !== fill) {
-          context.fillStyle = fill;
-          context.fill();
+        function drawCircle(x, y, r, fill, stroke) {
+            context.beginPath();
+            context.arc(x, y, r, 0, 2 * Math.PI, false);
+            if (null !== fill) {
+                context.fillStyle = fill;
+                context.fill();
+            }
+            context.lineWidth = 1;
+            if (null !== stroke) {
+                context.strokeStyle = stroke;
+                context.stroke();
+            }
         }
-        context.lineWidth = 1;
-        if (null !== stroke) {
-          context.strokeStyle = stroke;
-          context.stroke();
+
+        var canvas = document.getElementById("canvas");
+
+        var context = canvas.getContext("2d");
+        context.fillStyle = context.strokeStyle = "red";
+        //context.translate(200, 200);
+
+        var fontMetricsCalculator = new ddr_d3.util.FontMetricsCalculator();
+        fontMetricsCalculator.setContext(context);
+        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FourtySixAndTwo', '40px', '"Open Sans"', 'bold').toString());
+        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FourtySixAndTwo', '100px', '"Open Sans"', 'bold').toString());
+
+        return;
+
+        //drawCircle(0, 0, 5, null, "red");
+        //drawCircle(100, 100, 5, null, "blue");
+
+        context.fillStyle = "black";
+        context.font = 'bold 40px "Open Sans"';
+        context.fillText("FourtySixAndTwo", 0, 0);
+        console.log(context.measureText("FourtySixAndTwo"));
+
+        var id = context.createImageData(1, 1);
+        var d = id.data;
+        d[0] = 255;
+        d[1] = 0;
+        d[2] = 0;
+        d[3] = 255;
+
+        var minX = Number.MAX_VALUE;
+        var minY = Number.MAX_VALUE;
+        var maxX = -Number.MAX_VALUE;
+        var maxY = -Number.MAX_VALUE;
+
+        var scanStartX = -100;
+        var scanStartY = -100;
+        var scanWidth = 800;
+        var scanHeight = 600;
+        var imageData = context.getImageData(scanStartX, scanStartY, scanWidth, scanHeight);
+        for (var y = 0; y < scanHeight; y++) {
+            for (var x = 0; x < scanWidth; x++) {
+                var offset = (y * scanWidth * 4) + (x * 4);
+                idx = offset;
+                var red = imageData.data[idx];
+                idx = offset + 1;
+                var green = imageData.data[idx];
+                idx = offset + 2;
+                var blue = imageData.data[idx];
+                idx = offset + 3;
+                var alpha = imageData.data[idx];
+                if (red != 0 || green != 0 || blue != 0 || alpha != 0) {
+
+                    var actualX = x + scanStartX;
+                    var actualY = y + scanStartY;
+
+                    if (minX > actualX) {
+                        minX = actualX;
+                        //console.log(actualX, actualY);
+                        context.putImageData(id, actualX, actualY);
+                    }
+
+                    if (minY > actualY) {
+                        minY = actualY;
+                        //console.log(actualX, actualY);
+                        context.putImageData(id, actualX, actualY);
+                    }
+
+                    if (maxX < actualX) {
+                        maxX = actualX;
+                        //console.log(actualX, actualY);
+                        context.putImageData(id, actualX, actualY);
+                    }
+
+                    if (maxY < actualY) {
+                        maxY = actualY;
+                        //console.log(actualX, actualY);
+                        context.putImageData(id, actualX, actualY);
+                    }
+
+                    //console.log(x + scanStartX, y + scanStartY, red, green, blue, alpha);
+                    //context.putImageData(id, actualX, actualY);
+                }
+            }
         }
-      }
 
-      var canvas = document.getElementById("canvas");
+        context.strokeStyle = 'blue';
+        context.strokeRect(scanStartX, scanStartY, scanWidth, scanHeight);
 
-      var context = canvas.getContext("2d");
-      context.fillStyle = context.strokeStyle = "red";
-      context.translate(200, 200);
+        console.log(minX - 200, minY - 200, maxX - minX, maxY - minY);
+        context.strokeStyle = 'red';
+        context.strokeRect(minX - 200, minY - 200, maxX - minX, maxY - minY);
 
-      //drawCircle(0, 0, 5, null, "red");
-      //drawCircle(100, 100, 5, null, "blue");
-
-      context.fillStyle = "black";
-      context.font = 'bold 40px "Open Sans"';
-      context.fillText("FourtySixAndTwo", 0, 0);
-      console.log(context.measureText("FourtySixAndTwo"));
-
-      var id = context.createImageData(1,1);
-      var d  = id.data;
-      d[0]   = 255;
-      d[1]   = 0;
-      d[2]   = 0;
-      d[3]   = 255;
-
-      var minX = Number.MAX_VALUE;
-      var minY = Number.MAX_VALUE;
-      var maxX = -Number.MAX_VALUE;
-      var maxY = -Number.MAX_VALUE;
-
-      var scanStartX = -100;
-      var scanStartY = -100;
-      var scanWidth = 800;
-      var scanHeight = 600;
-      var imageData = context.getImageData(scanStartX, scanStartY, scanWidth, scanHeight);
-      for (var y = 0; y < scanHeight; y++) {
-        for (var x = 0; x < scanWidth; x++) {
-          var offset= (y * scanWidth * 4) + (x * 4);
-          idx = offset + 0;
-          var red = imageData.data[idx];
-          idx = offset + 1;
-          var green = imageData.data[idx];
-          idx = offset + 2;
-          var blue = imageData.data[idx];
-          idx = offset + 3;
-          var alpha = imageData.data[idx];
-          if (red != 0 || green != 0 || blue != 0 || alpha != 0) {
-
-            var actualX = x + scanStartX;
-            var actualY = y + scanStartY;
-
-            if (minX > actualX) {
-              minX = actualX;
-              console.log(actualX, actualY);
-              context.putImageData(id, actualX, actualY);
-            }
-
-            if (minY > actualY) {
-              minY = actualY;
-              console.log(actualX, actualY);
-              context.putImageData(id, actualX, actualY);
-            }
-
-            if (maxX < actualX) {
-              maxX = actualX;
-              console.log(actualX, actualY);
-              context.putImageData(id, actualX, actualY);
-            }
-
-            if (maxY < actualY) {
-              maxY = actualY;
-              console.log(actualX, actualY);
-              context.putImageData(id, actualX, actualY);
-            }
-
-            var maxX = Math.max(maxX, actualX);
-            var maxY = Math.max(maxY, actualY);
-            //console.log(x + scanStartX, y + scanStartY, red, green, blue, alpha);
-            //context.putImageData(id, actualX, actualY);
-          }
-        }
-      }
-
-      context.strokeStyle = 'blue';
-      context.strokeRect(scanStartX, scanStartY, scanWidth, scanHeight);
-
-      console.log(minX - 200, minY - 200, maxX - 200, maxY - 200);
-      context.strokeStyle = 'red';
-      context.strokeRect(minX - 200, minY - 200, maxX - minX, maxY - minY);
+        var fontMetricsCalculator = new ddr_d3.util.FontMetricsCalculator();
+        console.log(fontMetricsCalculator.getBoundingBoxFromCanvas('FourtySixAndTwo', '40px', '"Open Sans"', 'bold').toString());
     });
-  </script>
+</script>
 </body>
 
 </html>

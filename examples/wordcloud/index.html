@@ -164,14 +164,23 @@
       name: "Godsmack",
       playcount: "155",
     }];
+
+    function text(d, i) {
+      return d.name.toUpperCase();
+    }
+
+    function size(d, i) {
+      return Math.sqrt(d.playcount) * 2;
+    }
+
+    function pxSize(d, i) {
+      return size(d,i) + 'px';
+    }
+
     var wordcloud = new ddr_d3.layout.Wordcloud();
     wordcloud
-      .text(function(d, i) {
-        return d.name.toUpperCase();
-      })
-      .size(function(d, i) {
-        return Math.sqrt(d.playcount) * 2;
-      })
+      .text(text)
+      .size(size)
       .weight("bold")
       .family('"Open Sans"')
       .draw(draw)
@@ -192,15 +201,13 @@
         .style('font-family', function(d) {
           return d.family;
         })
-        .style('font-size', function(d) {
-          return d.size + 'px';
-        })
+        .style('font-size', pxSize)
         .style('font-weight', function(d) {
           return d.weight;
         })
         .style('fill', 'black')
         .attr('transform', function(d, i) {
-          console.log(d.text, d.originalBoundingBox.toString(), d.boundingBox.toString());
+          //console.log(d.text, d.originalBoundingBox.toString(), d.boundingBox.toString());
 
           if (i % 2 == 1) {
             return new ddr_d3.util.Transform().rotate(90, d.boundingBox.getCenter().getX(), d.boundingBox.getCenter().getY()).toString();
@@ -208,9 +215,7 @@
             return "";
           }
         })
-        .text(function(d) {
-          return d.text
-        });
+        .text(text);
 
       /* Draw orignial bounding boxes */
       /*var originalBB = container.append('g');
