@@ -1,5 +1,12 @@
 import ddr_d3_geometry_point from './point';
 
+/**
+ * @param {ddr_d3_geometry_point|number} xOrP1
+ * @param {ddr_d3_geometry_point|number} yOrP2
+ * @param {number} width
+ * @param {number} height
+ * @constructor
+ */
 var ddr_d3_geometry_rectangle = function (xOrP1, yOrP2, width, height) {
 
     var _p1, _p2;

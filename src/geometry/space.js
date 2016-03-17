@@ -5,7 +5,7 @@ var ddr_d3_geometry_space = function (x, y, width, height) {
     ddr_d3_geometry_rectangle.call(this, x, y, width, height);
 
     this.getDistanceToOrigin = function () {
-        return this.getDistanceToOtherPoint(new Point(0, 0));
+        return this.getDistanceToOtherPoint(new ddr_d3_geometry_point(0, 0));
     };
 
     this.getDistanceToOtherPoint = function (other) {

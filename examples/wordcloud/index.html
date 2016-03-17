@@ -7,18 +7,243 @@
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="../../build/ddr-d3.js" charset="utf-8"></script>
 </head>
+<div id="cloud"></div>
 <body>
-    <script type="text/javascript">
-        var words = [
-            "Hello", "world", "normally", "you", "want", "more", "words",
-            "than", "this"
-        ].map(function(d) {
-            return {
-                text: d,
-                size: 20 + Math.random() * 70
-            };
-        });
-        console.log(ddr_d3);
-    </script>
+<script type="text/javascript">
+    var topArtists = [
+        {
+            name: "Nine Inch Nails",
+            playcount: "1557",
+        },
+        {
+            name: "Deftones",
+            playcount: "1198",
+        },
+        {
+            name: "Tool",
+            playcount: "809",
+        },
+        {
+            name: "The Prodigy",
+            playcount: "745",
+        },
+        {
+            name: "Blackmail",
+            playcount: "635",
+        },
+        {
+            name: "Isis",
+            playcount: "585",
+        },
+        {
+            name: "Schweisser",
+            playcount: "566",
+        },
+        {
+            name: "Underworld",
+            playcount: "552",
+        },
+        {
+            name: "Nirvana",
+            playcount: "538",
+        },
+        {
+            name: "Pascal FEOS",
+            playcount: "532",
+        },
+        {
+            name: "Karnivool",
+            playcount: "514",
+        },
+        {
+            name: "Kyuss",
+            playcount: "501",
+
+        },
+        {
+            name: "Radiohead",
+            playcount: "479",
+        },
+        {
+            name: "dredg",
+            playcount: "474",
+        },
+        {
+            name: "Queens of the Stone Age",
+            playcount: "383",
+        },
+        {
+            name: "Pearl Jam",
+            playcount: "382",
+        },
+        {
+            name: "The Smashing Pumpkins",
+            playcount: "367",
+        },
+        {
+            name: "Baroness",
+            playcount: "366",
+        },
+        {
+            name: "Blumfeld",
+            playcount: "364",
+        },
+        {
+            name: "The Chemical Brothers",
+            playcount: "359",
+        },
+        {
+            name: "Cog",
+            playcount: "282",
+        },
+        {
+            name: "Fehlfarben",
+            playcount: "276",
+        },
+        {
+            name: "Madrugada",
+            playcount: "266",
+        },
+        {
+            name: "Air",
+            playcount: "262",
+        },
+        {
+            name: "Massive Attack",
+            playcount: "258",
+        },
+        {
+            name: "The Notwist",
+            playcount: "256",
+        },
+        {
+            name: "Korn",
+            playcount: "243",
+        },
+        {
+            name: "Porcupine Tree",
+            playcount: "235",
+        },
+        {
+            name: "Cult of Luna",
+            playcount: "223",
+        },
+        {
+            name: "Die Sterne",
+            playcount: "223",
+        },
+        {
+            name: "A Perfect Circle",
+            playcount: "220",
+        },
+        {
+            name: "Muse",
+            playcount: "218",
+        },
+        {
+            name: "Oceansize",
+            playcount: "207",
+        },
+        {
+            name: "Bad Religion",
+            playcount: "204",
+        },
+        {
+            name: "Orbital",
+            playcount: "201",
+        },
+        {
+            name: "Motörhead",
+            playcount: "194",
+        },
+        {
+            name: "Johann Sebastian Bach",
+            playcount: "191",
+        },
+        {
+            name: "Sparta",
+            playcount: "187",
+        },
+        {
+            name: "The Doors",
+            playcount: "187",
+        },
+        {
+            name: "Rage Against the Machine",
+            playcount: "186",
+        },
+        {
+            name: "Dub War",
+            playcount: "182",
+        },
+        {
+            name: "Archive",
+            playcount: "178",
+        },
+        {
+            name: "Portishead",
+            playcount: "177",
+        },
+        {
+            name: "The Offspring",
+            playcount: "177",
+        },
+        {
+            name: "Mogwai",
+            playcount: "172",
+        },
+        {
+            name: "Vast",
+            playcount: "169",
+        },
+        {
+            name: "Tocotronic",
+            playcount: "167",
+        },
+        {
+            name: "The Crystal Method",
+            playcount: "164",
+        },
+        {
+            name: "Apparat",
+            playcount: "160",
+        },
+        {
+            name: "Godsmack",
+            playcount: "155",
+        }
+    ];
+    var wordcloud = new ddr_d3.layout.Wordcloud();
+    wordcloud
+            .text(function (d, i) {
+                return d.name.toUpperCase();
+            })
+            .size(function (d, i) {
+                return Math.sqrt(d.playcount)
+            })
+            .weight("bold")
+            .family('"Ubuntu Mono"')
+            .draw(draw)
+            .layout(topArtists);
+
+    function draw(data) {
+        var svg = d3.select('#cloud').append('svg');
+        var container = svg.append('g');
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var wordElement = container.append("text")
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .style('font-family', d.family)
+                    .style('font-size', d.size + 'px')
+                    .style('font-weight', d.weight)
+                    .style('fill', 'black')
+                    .text(d.text);
+            wordElement.attr('transform', 'translate(' + (d.boundingBox.getLeftX() - d.originalBoundingBox.getLeftX()) + ',' + (d.boundingBox.getTopY() - d.originalBoundingBox.getTopY()) + ')');
+        }
+        var containerBounds = container.node().getBBox();
+        svg.attr('viewBox', containerBounds.x + ' ' + containerBounds.y + ' ' + containerBounds.width + ' ' + containerBounds.height);
+    }
+</script>
 </body>
 </html>
