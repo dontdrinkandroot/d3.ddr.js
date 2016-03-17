@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="../../build/ddr-d3.js" charset="utf-8"></script>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 </head>
 <div id="cloud"></div>
 <body>
@@ -213,6 +214,7 @@
             playcount: "155",
         }
     ];
+    topArtists = topArtists.splice(0, 4);
     var wordcloud = new ddr_d3.layout.Wordcloud();
     wordcloud
             .text(function (d, i) {
@@ -222,25 +224,95 @@
                 return Math.sqrt(d.playcount)
             })
             .weight("bold")
-            .family('"Ubuntu Mono"')
+            .family('"Open Sans"')
             .draw(draw)
             .layout(topArtists);
 
     function draw(data) {
         var svg = d3.select('#cloud').append('svg');
         var container = svg.append('g');
-        for (var i = 0; i < data.length; i++) {
-            var d = data[i];
-            var wordElement = container.append("text")
-                    .attr("x", 0)
-                    .attr("y", 0)
-                    .style('font-family', d.family)
-                    .style('font-size', d.size + 'px')
-                    .style('font-weight', d.weight)
-                    .style('fill', 'black')
-                    .text(d.text);
-            wordElement.attr('transform', 'translate(' + (d.boundingBox.getLeftX() - d.originalBoundingBox.getLeftX()) + ',' + (d.boundingBox.getTopY() - d.originalBoundingBox.getTopY()) + ')');
-        }
+        container.selectAll("text")
+                .data(data)
+                .enter().append("text")
+                .attr("x", 0)
+                .attr("y", 0)
+                .style('font-family', function (d) {
+                    return d.family;
+                })
+                .style('font-size', function (d) {
+                    return d.size + 'px';
+                })
+                .style('font-weight', function (d) {
+                    return d.weight;
+                })
+                .style('fill', 'black')
+                .attr('transform', function (d, i) {
+                    console.log(d.text, d.originalBoundingBox.toString(), d.boundingBox.toString());
+                    var ret = "";
+
+                    //ret += ' translate(' + (d.boundingBox.getLeftX()) + ' ' + (d.boundingBox.getTopY()) + ')';
+
+                    //ret += ' translate(-100 -100)';
+                    if (i % 2 == 0) {
+                        ret += ' rotate(90)';
+                        //ret += ' translate(' + (d.originalBoundingBox.getTopY()) + ',' + (-d.originalBoundingBox.getTopY()) + ')';
+                    } else {
+                        //ret += ' translate(' + (-d.originalBoundingBox.getLeftX()) + ',' + (-d.originalBoundingBox.getTopY()) + ')';
+                    }
+
+                    return ret;
+                })
+                .text(function (d) {
+                    return d.text
+                });
+
+        /* Draw orignial bounding boxes */
+        var originalBB = container.append('g');
+        originalBB.selectAll("rect")
+                .data(data)
+                .enter().append("rect")
+                .attr("x", function (d) {
+                    return d.originalBoundingBox.getX()
+                })
+                .attr("y", function (d) {
+                    return d.originalBoundingBox.getY()
+                })
+                .attr("width", function (d) {
+                    return d.originalBoundingBox.getWidth()
+                })
+                .attr("height", function (d) {
+                    return d.originalBoundingBox.getHeight()
+                })
+                .style('fill', 'none')
+                .style('stroke', 'red');
+
+        /* Draw bounding boxes */
+        var newBB = container.append('g');
+        newBB.selectAll("rect")
+                .data(data)
+                .enter().append("rect")
+                .attr("x", function (d) {
+                    return d.boundingBox.getX()
+                })
+                .attr("y", function (d) {
+                    return d.boundingBox.getY()
+                })
+                .attr("width", function (d) {
+                    return d.boundingBox.getWidth()
+                })
+                .attr("height", function (d) {
+                    return d.boundingBox.getHeight()
+                })
+                .style('fill', 'none')
+                .style('stroke', 'green');
+
+        /* Draw center */
+        container.append('circle')
+                .attr('cx', 0)
+                .attr('cy', 0)
+                .attr('r', 5)
+                .attr('stroke', 'red');
+
         var containerBounds = container.node().getBBox();
         svg.attr('viewBox', containerBounds.x + ' ' + containerBounds.y + ' ' + containerBounds.width + ' ' + containerBounds.height);
     }

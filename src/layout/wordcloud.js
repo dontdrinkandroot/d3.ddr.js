@@ -170,7 +170,12 @@ var ddr_d3_layout_wordcloud = function (words) {
                 .text(word.text);
             var bbox = wordElement.node().getBBox();
             word.originalBoundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, bbox.width, bbox.height);
-            word.boundingBox = new ddr_d3_geometry_rectangle(bbox.x - (word.size / 4), bbox.y, bbox.width + (word.size / 2), bbox.height);
+            word.boundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, word.originalBoundingBox.getWidth(), word.originalBoundingBox.getHeight());
+            if (i % 2 == 0) {
+                console.log('rotate');
+                word.originalBoundingBox = new ddr_d3_geometry_rectangle(bbox.y, bbox.x, bbox.height, bbox.width);
+                word.boundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, word.originalBoundingBox.getHeight(), word.originalBoundingBox.getWidth());
+            }
             minWidth = Math.min(minWidth, word.boundingBox.getWidth());
             minHeight = Math.min(minHeight, word.boundingBox.getHeight());
 
@@ -250,7 +255,7 @@ var ddr_d3_layout_wordcloud = function (words) {
 
         bbox = wordElement.node().getBBox();
         word.originalBoundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, bbox.width, bbox.height);
-        word.boundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, bbox.width + (word.size / 2), bbox.height);
+
 
         var found = false;
         for (var j = 0; j < spaces.length; j++) {
