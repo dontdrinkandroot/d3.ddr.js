@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Text Placement</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js" charset="utf-8"></script>
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="../../build/ddr-d3.js" charset="utf-8"></script>
+  <style type="text/css">
+
+  </style>
+</head>
+
+<body>
+  <svg width="801" height="801" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="gray" stroke-width="0.5" />
+      </pattern>
+      <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+        <rect width="100" height="100" fill="url(#smallGrid)" />
+        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="gray" stroke-width="1" />
+      </pattern>
+    </defs>
+
+    <rect width="100%" height="100%" fill="url(#grid)" />
+
+    <g id="container" transform="translate(200 200)">
+      <circle cx="0" cy="0" r="5" stroke="blue" fill="none" />
+    </g>
+  </svg>
+  <script type="text/javascript">
+    $(function() {
+
+      function drawText() {
+        return d3.select("#container")
+          .append("text")
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('font-size', '40px')
+          .style('fill', 'black')
+          .text('FourtySixAndTwo');
+      }
+
+      function drawRect(rect, color) {
+        if (undefined === color) {
+          color = 'blue';
+        }
+        var container = d3.select("#container");
+        container
+          .append('rect')
+          .attr('x', rect.getX())
+          .attr('y', rect.getY())
+          .attr('width', rect.getWidth())
+          .attr('height', rect.getHeight())
+          .style('fill', 'none')
+          .style('stroke', color);
+        container
+          .append('circle')
+          .attr('cx', rect.getCenter().getX())
+          .attr('cy', rect.getCenter().getY())
+          .attr('r', 5)
+          .style('stroke', color)
+          .style('fill', 'none');
+      }
+
+      var container = d3.select("#container");
+
+      var text1 = drawText();
+      var boundingBox = text1.node().getBBox();
+      var boundingRect1 = new ddr_d3.geometry.Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+      drawRect(boundingRect1);
+
+      var text2 = drawText();
+      var boundingBox = text2.node().getBBox();
+      var boundingRect = new ddr_d3.geometry.Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+
+      var text3 = drawText();
+      var boundingBox = text3.node().getBBox();
+      var boundingRect3 = new ddr_d3.geometry.Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+
+      var text4 = drawText();
+      var boundingBox = text4.node().getBBox();
+      var boundingRect4 = new ddr_d3.geometry.Rectangle(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+
+      var targetRect1 = new ddr_d3.geometry.Rectangle(200, 100, boundingBox.width, boundingBox.height);
+      drawRect(targetRect1, 'red');
+
+      var targetRect2 = new ddr_d3.geometry.Rectangle(100, 200, boundingBox.height, boundingBox.width);
+      drawRect(targetRect2, 'red');
+
+      text2.attr('transform', new ddr_d3.util.Transform().rotate(90, boundingRect.getCenter().getX(), boundingRect.getCenter().getY()).toString());
+
+      text3
+        .attr('x', targetRect1.getCenter().getX() - (boundingRect3.getWidth() / 2 ) - boundingRect3.getX())
+        .attr('y', targetRect1.getCenter().getY() - (boundingRect3.getHeight() / 2) - boundingRect3.getY());
+
+        text4
+          .attr('x', targetRect2.getCenter().getX() - (boundingRect4.getWidth() / 2 ) - boundingRect4.getX())
+          .attr('y', targetRect2.getCenter().getY() - (boundingRect4.getHeight() / 2) - boundingRect4.getY());
+          text4.attr('transform', new ddr_d3.util.Transform().rotate(90, targetRect2.getCenter().getX(), targetRect2.getCenter().getY()).toString());
+
+      /*text3.attr(
+        'transform',
+        new ddr_d3.util.Transform()
+        .translate(targetRect1.getX(), targetRect1.getY())
+        .translate(-boundingRect1.getX(), -boundingRect1.getY())
+        .toString()
+      );*/
+
+      /*text4.attr(
+        'transform',
+        new ddr_d3.util.Transform()
+        .translate(targetRect2.getX(), targetRect2.getY())
+        //.rotate(90, boundingRect.getCenter().getX(), boundingRect.getCenter().getY())
+        .toString()
+      );*/
+    });
+  </script>
+</body>
+
+</html>

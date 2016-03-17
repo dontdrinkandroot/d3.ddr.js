@@ -170,11 +170,10 @@ var ddr_d3_layout_wordcloud = function (words) {
                 .text(word.text);
             var bbox = wordElement.node().getBBox();
             word.originalBoundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, bbox.width, bbox.height);
-            word.boundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, word.originalBoundingBox.getWidth(), word.originalBoundingBox.getHeight());
-            if (i % 2 == 0) {
+            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth(), word.originalBoundingBox.getHeight());
+            if (i % 2 == 1) {
                 console.log('rotate');
-                word.originalBoundingBox = new ddr_d3_geometry_rectangle(bbox.y, bbox.x, bbox.height, bbox.width);
-                word.boundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, word.originalBoundingBox.getHeight(), word.originalBoundingBox.getWidth());
+                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight(), word.originalBoundingBox.getWidth());
             }
             minWidth = Math.min(minWidth, word.boundingBox.getWidth());
             minHeight = Math.min(minHeight, word.boundingBox.getHeight());
