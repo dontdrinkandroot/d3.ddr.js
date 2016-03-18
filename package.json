@@ -18,7 +18,8 @@
   "scripts": {
     "pretest": "rollup --format umd -n ddr_d3 -o ddr-d3.js -- index.js",
     "test": "faucet `find test -name '*-test.js'`",
-    "prepublish": "npm run test && uglifyjs ddr-d3.js -c -m -o ddr-d3.min.js"
+    "prepublish": "npm run test && uglifyjs ddr-d3.js -c -m -o ddr-d3.min.js",
+    "postpublish": "git push && git push --tags"
   },
   "devDependencies": {
     "faucet": "^0.0",
