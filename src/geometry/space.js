@@ -4,12 +4,16 @@ import ddr_d3_geometry_rectangle from './rectangle';
 var ddr_d3_geometry_space = function (x, y, width, height) {
     ddr_d3_geometry_rectangle.call(this, x, y, width, height);
 
-    this.getDistanceToOrigin = function () {
-        return this.getDistanceToOtherPoint(new ddr_d3_geometry_point(0, 0));
+    this.getDistanceToOrigin = function (ratio) {
+        return this.getDistanceToOtherPoint(new ddr_d3_geometry_point(0, 0), ratio);
     };
 
-    this.getDistanceToOtherPoint = function (other) {
+    this.getDistanceToOtherPoint = function (other, ratio) {
         var closestPoint = this.getClosestPointToOtherPoint(other);
+        if (ratio !== undefined) {
+            closestPoint.setX(closestPoint.getX() * ratio[1]);
+            closestPoint.setY(closestPoint.getY() * ratio[0]);
+        }
         return closestPoint.getDistance(other);
     };
 

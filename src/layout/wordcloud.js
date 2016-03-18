@@ -94,40 +94,72 @@ var ddr_d3_layout_wordcloud = function (words) {
         return typeof d === "function" ? d : function() { return d; };
     }
 
-    function wordSize(d) {
+    function fontSize(d) {
         return Math.sqrt(d.size);
     }
 
-    function wordFontFamily(d) {
+    function fontFamily(d) {
         return "sans-serif";
     }
 
-    function wordFontWeight(d) {
+    function fontWeight(d) {
         return "normal";
     }
 
-    function wordText(d) {
+    function rotate(d, i) {
+        return false;
+    }
+
+    function marginH(d,i) {
+        return d.size / 2;
+    }
+
+    function marginV(d,i) {
+        return d.size / 4;
+    }
+
+    function ratio() {
+        return [1, 1];
+    }
+
+    function text(d) {
         return d.text;
     }
 
     function draw(data) {
-        console.log(data);
+        throw "You need to define the wordcloud.draw(function(data))";
     }
 
     this.text = function(args) {
-        return arguments.length ? (wordText = functor(args), this) : wordText;
+        return arguments.length ? (text = functor(args), this) : text;
     };
 
-    this.size = function(args) {
-        return arguments.length ? (wordSize = functor(args), this) : wordSize;
+    this.fontSize = function(args) {
+        return arguments.length ? (fontSize = functor(args), this) : fontSize;
     };
 
-    this.weight = function(args) {
-        return arguments.length ? (wordFontWeight = functor(args), this) : wordFontWeight;
+    this.fontWeight = function(args) {
+        return arguments.length ? (fontWeight = functor(args), this) : fontWeight;
     };
 
-    this.family = function(args) {
-        return arguments.length ? (wordFontFamily = functor(args), this) : wordFontFamily;
+    this.fontFamily = function(args) {
+        return arguments.length ? (fontFamily = functor(args), this) : fontFamily;
+    };
+
+    this.marginV = function(args) {
+        return arguments.length ? (marginV = functor(args), this) : marginV;
+    };
+
+    this.marginH = function(args) {
+        return arguments.length ? (marginH = functor(args), this) : marginH;
+    };
+
+    this.rotate = function(args) {
+        return arguments.length ? (rotate = functor(args), this) : rotate;
+    };
+
+    this.ratio = function(args) {
+        return arguments.length ? (ratio = functor(args), this) : ratio;
     };
 
     this.draw = function(args) {
@@ -137,17 +169,43 @@ var ddr_d3_layout_wordcloud = function (words) {
         return (draw = functor(args), this);
     };
 
+    this.xPlacement = function() {
+        return function (d) {
+            return d.boundingBox.getCenter().getX() - (d.originalBoundingBox.getWidth() / 2) - d.originalBoundingBox.getX();
+        }
+    };
+
+    this.yPlacement = function() {
+        return function (d) {
+            return d.boundingBox.getCenter().getY() - (d.originalBoundingBox.getHeight() / 2) - d.originalBoundingBox.getY();
+        }
+    };
+
+
+    this.familyAccessor = function() {
+        return function(d) {
+            return d.family;
+        }
+    };
+
+    this.weightAccessor = function() {
+        return function(d) {
+            return d.weight;
+        }
+    };
 
     this.layout = function(input) {
 
         var startDate = new Date();
 
-        console.log(input);
         var data = input.map(function(d, i) {
-            d.size = wordSize.call(this, d, i);
-            d.family = wordFontFamily.call(this, d, i);
-            d.weight = wordFontWeight.call(this, d, i);
-            d.text = wordText.call(this, d, i);
+            d.size = fontSize.call(this, d, i);
+            d.family = fontFamily.call(this, d, i);
+            d.weight = fontWeight.call(this, d, i);
+            d.rotate = rotate.call(this, d, i);
+            d.marginV = marginV.call(this, d, i);
+            d.marginH = marginH.call(this, d, i);
+            d.text = text.call(this, d, i);
             return d;
         }).sort(function(a, b) { return b.size - a.size; });
 
@@ -162,10 +220,9 @@ var ddr_d3_layout_wordcloud = function (words) {
             var minWidth = Number.MAX_VALUE;
             var word = data[i];
             word.originalBoundingBox = fontMetricsCalculator.getBoundingBoxFromCanvas(word.text, word.size + 'px', word.family, word.weight);
-            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth() + word.size / 2, word.originalBoundingBox.getHeight() + word.size / 4);
-            if (i % 2 == 1) {
-                console.log('rotate');
-                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight() + word.size / 4, word.originalBoundingBox.getWidth() + word.size / 2);
+            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth() + word.marginH, word.originalBoundingBox.getHeight() + word.marginV);
+            if (word.rotate) {
+                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight() + word.marginV, word.originalBoundingBox.getWidth() + word.marginH);
             }
             minWidth = Math.min(minWidth, word.boundingBox.getWidth());
             minHeight = Math.min(minHeight, word.boundingBox.getHeight());
@@ -197,7 +254,7 @@ var ddr_d3_layout_wordcloud = function (words) {
             }
             spaces = tempSpaces;
             spaces.sort(function (a, b) {
-                return a.getDistanceToOrigin() - b.getDistanceToOrigin();
+                return a.getDistanceToOrigin(ratio.call(this)) - b.getDistanceToOrigin(ratio.call(this));
             });
         }
 
@@ -206,126 +263,6 @@ var ddr_d3_layout_wordcloud = function (words) {
 
         draw.call(this, data);
     };
-
-    return;
-
-    var element = d3.select('body');
-    var width = element[0][0].offsetWidth;
-
-    var svg = element.append("svg");
-    var overallBounds = new ddr_d3_geometry_rectangle(0, 0, 0, 0);
-
-    var wordElements = [];
-
-    var spaces = [];
-    spaces.push(new ddr_d3_geometry_rectangle(-Number.MAX_VALUE / 2, -Number.MAX_VALUE / 2, Number.MAX_VALUE, Number.MAX_VALUE));
-
-    var container = svg.append('g');
-
-
-    for (var i = 0; i < words.length; i++) {
-        var word = words[i];
-        var wordElement = container.append("text")
-            .attr("x", 0)
-            .attr("y", 0)
-            .style('font-family', '"Ubuntu Mono",monospace')
-            .style('font-size', word.size + 'px')
-            .style('font-weight', word.weight)
-            .style('fill', 'black')
-            .text(word.text.toUpperCase());
-        //.attr('transform', 'rotate(90)');
-
-        var bbox = wordElement.node().getBBox();
-        //console.log('bbox', bbox);
-
-        //word.normalizationFactor = Math.sqrt(3000 / (bbox.width * bbox.height));
-
-        //wordElement.style('font-size', (20 * word.normalizationFactor) + 'px');
-
-        bbox = wordElement.node().getBBox();
-        word.originalBoundingBox = new ddr_d3_geometry_rectangle(bbox.x, bbox.y, bbox.width, bbox.height);
-
-
-        var found = false;
-        for (var j = 0; j < spaces.length; j++) {
-            var space = spaces[j];
-            if (space.getWidth() >= word.boundingBox.getWidth() && space.getHeight() >= word.boundingBox.getHeight()) {
-                word.boundingBox = alignBoundsToSpace(space, word.boundingBox);
-                overallBounds.merge(word.boundingBox);
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            throw 'No Space Found' + word.boundingBox.toString()
-        }
-
-        wordElement.attr('transform', 'translate(' + (word.boundingBox.getLeftX() - word.originalBoundingBox.getLeftX() + (word.size / 4)) + ',' + (word.boundingBox.getTopY() - word.originalBoundingBox.getTopY()) + ')');
-
-        var tempSpaces = [];
-
-        for (j = 0; j < spaces.length; j++) {
-            space = spaces[j];
-            if (space.intersectsRectangle(word.boundingBox)) {
-                var newSpaces = intersect(space, word.boundingBox);
-                for (var k = 0; k < newSpaces.length; k++) {
-                    var newSpace = newSpaces[k];
-                    if (newSpace.getWidth() >= 10 && newSpace.getHeight() >= 10) {
-                        tempSpaces.push(newSpace);
-                    }
-                }
-            } else {
-                tempSpaces.push(space);
-            }
-        }
-
-
-        spaces = tempSpaces;
-        spaces.sort(function (a, b) {
-            return a.getDistanceToOrigin() - b.getDistanceToOrigin();
-        });
-        //console.log('Recomputed spaces', spaces);
-
-        /*container.append('rect')
-         .attr('x', word.boundingBox.getX())
-         .attr('y', word.boundingBox.getY())
-         .attr('width', word.boundingBox.getWidth())
-         .attr('height', word.boundingBox.getHeight())
-         .attr('stroke', 'green')
-         .attr('fill', 'none');*/
-
-        wordElements.push(wordElement);
-    }
-
-    /*container.append('rect')
-     .attr('x', overallBounds.getX())
-     .attr('y', overallBounds.getY())
-     .attr('width', overallBounds.getWidth())
-     .attr('height', overallBounds.getHeight())
-     .attr('stroke', 'red')
-     .attr('fill', 'none');
-
-     container.append('circle')
-     .attr('cx', overallBounds.getCenter().getX())
-     .attr('cy', overallBounds.getCenter().getY())
-     .attr('r', 5)
-     .attr('stroke', 'red');*/
-
-    //console.log('Overall Bounds', overallBounds.toString());
-
-    var scaleFactor = width / overallBounds.getWidth();
-    //console.log('Scale Factor', scaleFactor);
-
-    var height = overallBounds.getHeight() * scaleFactor;
-
-    svg
-        .attr('width', width)
-        .attr('height', height);
-
-    svg.attr('viewBox', overallBounds.getX() + ' ' + overallBounds.getY() + ' ' + overallBounds.getWidth() + ' ' + overallBounds.getHeight());
-
-
 };
 
 export default ddr_d3_layout_wordcloud;
