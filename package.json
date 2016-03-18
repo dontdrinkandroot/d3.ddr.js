@@ -16,12 +16,14 @@
     "url": "https://github.com/dontdrinkandroot/d3.ddr.js.git"
   },
   "scripts": {
-    "pretest": "rollup --format umd -n ddr_d3 -o build/ddr-d3.js -- index.js",
-    "test": "faucet `find test -name '*-test.js'`"
+    "pretest": "rollup --format umd -n ddr_d3 -o ddr-d3.js -- index.js",
+    "test": "faucet `find test -name '*-test.js'`",
+    "prepublish": "npm run test && uglifyjs ddr-d3.js -c -m -o ddr-d3.min.js"
   },
   "devDependencies": {
     "faucet": "^0.0",
     "tape": "^4",
-    "rollup": "^0.15"
+    "rollup": "^0.15",
+    "uglify-js": "2"
   }
 }

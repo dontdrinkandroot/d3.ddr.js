@@ -1,3 +1,6 @@
 /.idea/
 /node_modules/
+
 /build/
+/ddr-d3.js
+/ddr-d3.min.js

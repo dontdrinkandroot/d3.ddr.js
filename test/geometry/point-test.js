@@ -1,5 +1,5 @@
 var test = require("tape");
-var ddr_d3 = require("../../build/ddr-d3");
+var ddr_d3 = require("../../ddr-d3");
 
 test('Point.Distance', function (t) {
     var p1, p2;
