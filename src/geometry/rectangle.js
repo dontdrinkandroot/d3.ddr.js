@@ -27,7 +27,7 @@ var ddr_d3_geometry_rectangle = function (xOrP1, yOrP2, width, height) {
         return other.getLeftX() >= this.getLeftX()
             && other.getTopY() >= this.getTopY()
             && other.getRightX() <= this.getRightX()
-            && other.getBottomY() <= this.getBottomY()
+            && other.getBottomY() <= this.getBottomY();
     };
 
     this.intersectsRectangle = function (other) {

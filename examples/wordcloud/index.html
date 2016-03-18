@@ -189,8 +189,10 @@
         }
 
         var fontFamily = '"Open Sans"';
+        //var fontFamily = '"Ubuntu Mono"';
 
         var fontWeight = 800;
+        //var fontWeight = 700;
 
         var wordcloud = new ddr_d3.layout.Wordcloud();
         wordcloud
@@ -283,7 +285,7 @@
     $(function () {
         WebFont.load({
             google: {
-                families: ['Open Sans:400,700,800']
+                families: ['Open Sans:400,700,800', 'Ubuntu Mono:400,700']
             },
             active: function () {
                 console.log('All fonts loaded');

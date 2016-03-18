@@ -5,6 +5,34 @@ import ddr_d3_util_font_metrics_calculator from '../util/fontmetricscalculator';
 
 var ddr_d3_layout_wordcloud = function (words) {
 
+    function removeRedundantSpaces(spaces) {
+        /* Remove spaces that are contained within another space */
+        var removeIndizes = [];
+        for (var l = 0; l < spaces.length; l++) {
+            var space1 = spaces[l];
+            for (var m = l + 1; m < spaces.length; m++) {
+                var space2 = spaces[m];
+                if (space1.containsRectangle(space2)) {
+                    if (removeIndizes.indexOf(m) === -1) {
+                        removeIndizes.push(m);
+                    }
+                } else if (space2.containsRectangle(space1)) {
+                    if (removeIndizes.indexOf(l) === -1) {
+                        removeIndizes.push(l);
+                    }
+                }
+            }
+        }
+        removeIndizes.sort(function (a, b) {
+            return a - b;
+        });
+        for (var removeIndizesIdx = removeIndizes.length - 1; removeIndizesIdx >= 0; removeIndizesIdx--) {
+            spaces.splice(removeIndizes[removeIndizesIdx], 1);
+        }
+
+        return spaces;
+    }
+    
     /**
      * @param {ddr_d3_geometry_space} space
      * @param {ddr_d3_geometry_rectangle} rect
@@ -91,7 +119,9 @@ var ddr_d3_layout_wordcloud = function (words) {
     }
 
     function functor(d) {
-        return typeof d === "function" ? d : function() { return d; };
+        return typeof d === "function" ? d : function () {
+            return d;
+        };
     }
 
     function fontSize(d) {
@@ -110,11 +140,11 @@ var ddr_d3_layout_wordcloud = function (words) {
         return false;
     }
 
-    function marginH(d,i) {
+    function marginH(d, i) {
         return d.size / 2;
     }
 
-    function marginV(d,i) {
+    function marginV(d, i) {
         return d.size / 4;
     }
 
@@ -130,75 +160,80 @@ var ddr_d3_layout_wordcloud = function (words) {
         throw "You need to define the wordcloud.draw(function(data))";
     }
 
-    this.text = function(args) {
+    this.text = function (args) {
         return arguments.length ? (text = functor(args), this) : text;
     };
 
-    this.fontSize = function(args) {
+    this.fontSize = function (args) {
         return arguments.length ? (fontSize = functor(args), this) : fontSize;
     };
 
-    this.fontWeight = function(args) {
+    this.fontWeight = function (args) {
         return arguments.length ? (fontWeight = functor(args), this) : fontWeight;
     };
 
-    this.fontFamily = function(args) {
+    this.fontFamily = function (args) {
         return arguments.length ? (fontFamily = functor(args), this) : fontFamily;
     };
 
-    this.marginV = function(args) {
+    this.marginV = function (args) {
         return arguments.length ? (marginV = functor(args), this) : marginV;
     };
 
-    this.marginH = function(args) {
+    this.marginH = function (args) {
         return arguments.length ? (marginH = functor(args), this) : marginH;
     };
 
-    this.rotate = function(args) {
+    this.rotate = function (args) {
         return arguments.length ? (rotate = functor(args), this) : rotate;
     };
 
-    this.ratio = function(args) {
+    this.ratio = function (args) {
         return arguments.length ? (ratio = functor(args), this) : ratio;
     };
 
-    this.draw = function(args) {
+    this.draw = function (args) {
         if (arguments.length == 0) {
             throw "You need to define the wordcloud.draw(function(data))";
         }
         return (draw = functor(args), this);
     };
 
-    this.xPlacement = function() {
+    this.xPlacement = function () {
         return function (d) {
             return d.boundingBox.getCenter().getX() - (d.originalBoundingBox.getWidth() / 2) - d.originalBoundingBox.getX();
         }
     };
 
-    this.yPlacement = function() {
+    this.yPlacement = function () {
         return function (d) {
             return d.boundingBox.getCenter().getY() - (d.originalBoundingBox.getHeight() / 2) - d.originalBoundingBox.getY();
         }
     };
 
 
-    this.familyAccessor = function() {
-        return function(d) {
+    this.familyAccessor = function () {
+        return function (d) {
             return d.family;
         }
     };
 
-    this.weightAccessor = function() {
-        return function(d) {
+    this.weightAccessor = function () {
+        return function (d) {
             return d.weight;
         }
     };
 
-    this.layout = function(input) {
+    this.layout = function (input) {
 
-        var startDate = new Date();
+        var startTime = Date.now();
 
-        var data = input.map(function(d, i) {
+        var fontMetricsCalculator = new ddr_d3_util_font_metrics_calculator();
+
+        var minHeight = Number.MAX_VALUE;
+        var minWidth = Number.MAX_VALUE;
+
+        var data = input.map(function (d, i) {
             d.size = fontSize.call(this, d, i);
             d.family = fontFamily.call(this, d, i);
             d.weight = fontWeight.call(this, d, i);
@@ -206,26 +241,25 @@ var ddr_d3_layout_wordcloud = function (words) {
             d.marginV = marginV.call(this, d, i);
             d.marginH = marginH.call(this, d, i);
             d.text = text.call(this, d, i);
+            d.originalBoundingBox = fontMetricsCalculator.getBoundingBoxFromCanvas(d.text, d.size + 'px', d.family, d.weight);
+            d.boundingBox = new ddr_d3_geometry_rectangle(0, 0, d.originalBoundingBox.getWidth() + d.marginH, d.originalBoundingBox.getHeight() + d.marginV);
+            if (d.rotate) {
+                d.boundingBox = new ddr_d3_geometry_rectangle(0, 0, d.originalBoundingBox.getHeight() + d.marginV, d.originalBoundingBox.getWidth() + d.marginH);
+            }
+            minWidth = Math.min(minWidth, d.boundingBox.getWidth());
+            minHeight = Math.min(minHeight, d.boundingBox.getHeight());
             return d;
-        }).sort(function(a, b) { return b.size - a.size; });
+        }).sort(function (a, b) {
+            return b.size - a.size;
+        });
 
         /* Init spaces */
         var spaces = [];
-        spaces.push(new ddr_d3_geometry_rectangle(-Number.MAX_VALUE / 2, -Number.MAX_VALUE / 2, Number.MAX_VALUE, Number.MAX_VALUE));
-
-        var fontMetricsCalculator = new ddr_d3_util_font_metrics_calculator();
+        spaces.push(new ddr_d3_geometry_rectangle(-100000, -100000, 200000, 200000));
 
         for (var i = 0; i < data.length; i++) {
-            var minHeight = Number.MAX_VALUE;
-            var minWidth = Number.MAX_VALUE;
+
             var word = data[i];
-            word.originalBoundingBox = fontMetricsCalculator.getBoundingBoxFromCanvas(word.text, word.size + 'px', word.family, word.weight);
-            word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getWidth() + word.marginH, word.originalBoundingBox.getHeight() + word.marginV);
-            if (word.rotate) {
-                word.boundingBox = new ddr_d3_geometry_rectangle(0, 0, word.originalBoundingBox.getHeight() + word.marginV, word.originalBoundingBox.getWidth() + word.marginH);
-            }
-            minWidth = Math.min(minWidth, word.boundingBox.getWidth());
-            minHeight = Math.min(minHeight, word.boundingBox.getHeight());
 
             var found = false;
             for (var j = 0; j < spaces.length; j++) {
@@ -237,29 +271,32 @@ var ddr_d3_layout_wordcloud = function (words) {
                 }
             }
 
-            var tempSpaces = [];
+            var untouchedSpaces = [];
+            var newSpaces = [];
             for (j = 0; j < spaces.length; j++) {
                 space = spaces[j];
                 if (space.intersectsRectangle(word.boundingBox)) {
-                    var newSpaces = intersect(space, word.boundingBox);
-                    for (var k = 0; k < newSpaces.length; k++) {
-                        var newSpace = newSpaces[k];
-                        if (newSpace.getWidth() >= minWidth && newSpace.getHeight() >= minHeight) {
-                            tempSpaces.push(newSpace);
+                    var intersectedSpaces = intersect(space, word.boundingBox);
+                    for (var k = 0; k < intersectedSpaces.length; k++) {
+                        var intersectedSpace = intersectedSpaces[k];
+                        if (intersectedSpace.getWidth() >= minWidth && intersectedSpace.getHeight() >= minHeight) {
+                            newSpaces.push(intersectedSpace);
                         }
                     }
                 } else {
-                    tempSpaces.push(space);
+                    untouchedSpaces.push(space);
                 }
             }
-            spaces = tempSpaces;
+            
+            newSpaces = removeRedundantSpaces(newSpaces);
+
+            spaces = untouchedSpaces.concat(newSpaces);
             spaces.sort(function (a, b) {
                 return a.getDistanceToOrigin(ratio.call(this)) - b.getDistanceToOrigin(ratio.call(this));
             });
         }
 
-        var endDate = new Date();
-        console.log('Layouting took ' + (endDate.getMilliseconds() - startDate.getMilliseconds()));
+        console.log('Layouting took ' + (Date.now() - startTime));
 
         draw.call(this, data);
     };
