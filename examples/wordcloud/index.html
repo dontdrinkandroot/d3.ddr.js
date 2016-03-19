@@ -208,6 +208,9 @@
                 .layout(topArtists);
 
         function draw(data) {
+
+            var sizeExtent = d3.extent(data, function(d) {return d.size});
+
             var svgWidth = 400;
             var svg = d3.select('#cloud').append('svg').attr('width', svgWidth);
             var container = svg.append('g');
@@ -221,7 +224,10 @@
                         return d.size + 'px';
                     })
                     .style('font-weight', wordcloud.weightAccessor())
-                    .style('fill', 'black')
+                    .style('fill', function(d) {
+                        var val = 128 - (128 * ((d.size - sizeExtent[0]) / (sizeExtent[1] - sizeExtent[0])));
+                        return d3.rgb(val, val, val);
+                    })
                     .attr('transform', function (d, i) {
                         if (d.rotate) {
                             return new ddr_d3.util.Transform().rotate(90, d.boundingBox.getCenter().getX(), d.boundingBox.getCenter().getY()).toString();
