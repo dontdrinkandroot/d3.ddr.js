@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Context Textbounds</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../../ddr-d3.js" charset="utf-8"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+<script type="text/javascript">
+    $(function () {
+        var data = [];
+        for (var i = 0; i < 20; i++) {
+            var rect = new ddr_d3.geometry.Rectangle(0, 0, 10 + Math.random() * 500, 10 + Math.random() * 500);
+            data.push({
+                rect: rect
+            })
+        }
+
+        data.sort(function(a,b) {
+            return b.rect.getArea() - a.rect.getArea();
+        });
+
+        var packer = new ddr_d3.layout.RectanglePacker();
+        packer.getRectangle(function (d) {
+            return d.rect
+        }).pack(data);
+
+        var svg = d3.select('body').append('svg');
+        var container = svg.append('g');
+        container.selectAll('rect')
+                .data(data)
+                .enter()
+                .append('rect')
+                .attr('x', function (d) {
+                    return d.rect.getX()
+                })
+                .attr('y', function (d) {
+                    return d.rect.getY()
+                })
+                .attr('width', function (d) {
+                    return d.rect.getWidth()
+                })
+                .attr('height', function (d) {
+                    return d.rect.getHeight()
+                })
+                .style('fill', function (d) {
+                    return d3.rgb(
+                            Math.round(Math.random() * 255),
+                            Math.round(Math.random() * 255),
+                            Math.round(Math.random() * 255)
+                    );
+                });
+
+        svg.append('circle').attr('x', 0).attr('y', 0).attr('r', 5).style('stroke','red').style('fill', 'none');
+
+        var bbox = container.node().getBBox();
+        svg.attr('viewBox', bbox.x + ' ' + bbox.y + ' ' + bbox.width + ' ' + bbox.height);
+    });
+</script>
+</body>
+
+</html>

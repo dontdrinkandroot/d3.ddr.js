@@ -167,8 +167,8 @@ var ddr_d3_layout_rectangle_packer = function () {
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             var rect = getRectangle.call(this, d);
-            minWidth = Math.min(minWidth, d.boundingBox.getWidth());
-            minHeight = Math.min(minHeight, d.boundingBox.getHeight());
+            minWidth = Math.min(minWidth, rect.getWidth());
+            minHeight = Math.min(minHeight, rect.getHeight());
         }
 
         for (i = 0; i < data.length; i++) {
