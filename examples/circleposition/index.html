@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Circle Position</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../../ddr-d3.js" charset="utf-8"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+    <label for="xpos">X</label>
+    <input type="text" id="xpos" />
+
+    <label for="ypos">Y</label>
+    <input type="text" id="ypos" />
+
+    <label for="radius">R</label>
+    <input type="text" id="radius" />
+
+    <p id="output"></p>
+<body>
+<script type="text/javascript">
+    $(function () {
+        function update() {
+            var x = $('#xpos').val();
+            var y = $('#ypos').val();
+            var r = $('#radius').val();
+
+            console.log(x);
+            console.log(y);
+
+            if (r !== undefined && r !== '') {
+                if (x !== undefined && x !== '' && (y === undefined || y === '')) {
+                    y = Math.sqrt(r * r - x * x);
+                }
+                if (y !== undefined && y !== '' && (x === undefined || x === '')) {
+                    x = Math.sqrt(r * r - y * y);
+                }
+                $('#output').html('x='+x+',y='+y+',r='+r);
+            }
+        }
+
+        $('#xpos, #ypos, #radius').change(update);
+
+    });
+</script>
+</body>
+
+</html>
