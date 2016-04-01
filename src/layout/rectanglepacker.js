@@ -4,14 +4,11 @@ import ddr_d3_geometry_space from '../geometry/space';
 
 var ddr_d3_layout_rectangle_packer = function () {
 
+    var _spaces = [];
+    var _minHeight = 0;
+    var _minWidth = 0;
 
-    function getRectangle(d) {
-        return d.rect;
-    }
-
-    function setRectangle(d, rect) {
-        d.rect = rect;
-    }
+    _spaces.push(new ddr_d3_geometry_rectangle(-100000, -100000, 200000, 200000));
 
     function ratio() {
         return [1, 1];
@@ -130,14 +127,40 @@ var ddr_d3_layout_rectangle_packer = function () {
         return newSpaces;
     }
 
-    this.getRectangle = function (arg) {
-        getRectangle = arg;
-        return this;
+    this.findPosition = function(rect) {
+        for (var i = 0; i < _spaces.length; i++) {
+            var space = _spaces[i];
+            if (space.getWidth() >= rect.getWidth() && space.getHeight() >= rect.getHeight()) {
+                return alignBoundsToSpace(space, rect);
+            }
+        }
+        throw 'No suitable space found';
     };
 
-    this.setRectangle = function (arg) {
-        setRectangle = arg;
-        return this;
+    this.place = function(rect) {
+        var untouchedSpaces = [];
+        var newSpaces = [];
+        for (var j = 0; j < _spaces.length; j++) {
+            var space = _spaces[j];
+            if (space.intersectsRectangle(rect)) {
+                var intersectedSpaces = intersect(space, rect);
+                for (var k = 0; k < intersectedSpaces.length; k++) {
+                    var intersectedSpace = intersectedSpaces[k];
+                    if (intersectedSpace.getWidth() >= _minWidth && intersectedSpace.getHeight() >= _minHeight) {
+                        newSpaces.push(intersectedSpace);
+                    }
+                }
+            } else {
+                untouchedSpaces.push(space);
+            }
+        }
+
+        newSpaces = removeRedundantSpaces(newSpaces);
+
+        _spaces = untouchedSpaces.concat(newSpaces);
+        _spaces.sort(function (a, b) {
+            return a.getDistanceToOrigin(ratio.call(this)) - b.getDistanceToOrigin(ratio.call(this));
+        });
     };
 
     this.ratio = function (arg) {
@@ -156,64 +179,13 @@ var ddr_d3_layout_rectangle_packer = function () {
         }
     };
 
-    this.pack = function (data) {
+    this.setMinHeight = function(minHeight) {
+        _minHeight = minHeight;
+        return this;
+    };
 
-        var startTime = Date.now();
-        var spaces = [];
-        spaces.push(new ddr_d3_geometry_rectangle(-100000, -100000, 200000, 200000));
-
-        var minHeight = Number.MAX_VALUE;
-        var minWidth = Number.MAX_VALUE;
-        for (var i = 0; i < data.length; i++) {
-            var d = data[i];
-            var rect = getRectangle.call(this, d);
-            minWidth = Math.min(minWidth, rect.getWidth());
-            minHeight = Math.min(minHeight, rect.getHeight());
-        }
-
-        for (i = 0; i < data.length; i++) {
-
-            d = data[i];
-            rect = getRectangle.call(this, d);
-
-            var found = false;
-            for (var j = 0; j < spaces.length; j++) {
-                var space = spaces[j];
-                if (space.getWidth() >= rect.getWidth() && space.getHeight() >= rect.getHeight()) {
-                    rect = alignBoundsToSpace(space, rect);
-                    found = true;
-                    break;
-                }
-            }
-
-            var untouchedSpaces = [];
-            var newSpaces = [];
-            for (j = 0; j < spaces.length; j++) {
-                space = spaces[j];
-                if (space.intersectsRectangle(rect)) {
-                    var intersectedSpaces = intersect(space, rect);
-                    for (var k = 0; k < intersectedSpaces.length; k++) {
-                        var intersectedSpace = intersectedSpaces[k];
-                        if (intersectedSpace.getWidth() >= minWidth && intersectedSpace.getHeight() >= minHeight) {
-                            newSpaces.push(intersectedSpace);
-                        }
-                    }
-                } else {
-                    untouchedSpaces.push(space);
-                }
-            }
-
-            newSpaces = removeRedundantSpaces(newSpaces);
-
-            spaces = untouchedSpaces.concat(newSpaces);
-            spaces.sort(function (a, b) {
-                return a.getDistanceToOrigin(ratio.call(this)) - b.getDistanceToOrigin(ratio.call(this));
-            });
-
-            setRectangle.call(this, d, rect);
-        }
-
-        console.debug('Packing took', Date.now() - startTime);
+    this.setMinWidth = function(minWidth) {
+        _minWidth = minWidth;
         return this;
     };
 

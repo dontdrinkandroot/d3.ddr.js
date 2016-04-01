@@ -13,279 +13,130 @@
 
 <body>
 <script type="text/javascript">
-    var topArtists = [{
-        name: "Nine Inch Nails",
-        playcount: "1557",
-    }, {
-        name: "Deftones",
-        playcount: "1198",
-    }, {
-        name: "Tool",
-        playcount: "809",
-    }, {
-        name: "The Prodigy",
-        playcount: "745",
-    }, {
-        name: "Blackmail",
-        playcount: "635",
-    }, {
-        name: "Isis",
-        playcount: "585",
-    }, {
-        name: "Schweisser",
-        playcount: "566",
-    }, {
-        name: "Underworld",
-        playcount: "552",
-    }, {
-        name: "Nirvana",
-        playcount: "538",
-    }, {
-        name: "Pascal FEOS",
-        playcount: "532",
-    }, {
-        name: "Karnivool",
-        playcount: "514",
-    }, {
-        name: "Kyuss",
-        playcount: "501",
-
-    }, {
-        name: "Radiohead",
-        playcount: "479",
-    }, {
-        name: "dredg",
-        playcount: "474",
-    }, {
-        name: "Queens of the Stone Age",
-        playcount: "383",
-    }, {
-        name: "Pearl Jam",
-        playcount: "382",
-    }, {
-        name: "The Smashing Pumpkins",
-        playcount: "367",
-    }, {
-        name: "Baroness",
-        playcount: "366",
-    }, {
-        name: "Blumfeld",
-        playcount: "364",
-    }, {
-        name: "The Chemical Brothers",
-        playcount: "359",
-    }, {
-        name: "Cog",
-        playcount: "282",
-    }, {
-        name: "Fehlfarben",
-        playcount: "276",
-    }, {
-        name: "Madrugada",
-        playcount: "266",
-    }, {
-        name: "Air",
-        playcount: "262",
-    }, {
-        name: "Massive Attack",
-        playcount: "258",
-    }, {
-        name: "The Notwist",
-        playcount: "256",
-    }, {
-        name: "Korn",
-        playcount: "243",
-    }, {
-        name: "Porcupine Tree",
-        playcount: "235",
-    }, {
-        name: "Cult of Luna",
-        playcount: "223",
-    }, {
-        name: "Die Sterne",
-        playcount: "223",
-    }, {
-        name: "A Perfect Circle",
-        playcount: "220",
-    }, {
-        name: "Muse",
-        playcount: "218",
-    }, {
-        name: "Oceansize",
-        playcount: "207",
-    }, {
-        name: "Bad Religion",
-        playcount: "204",
-    }, {
-        name: "Orbital",
-        playcount: "201",
-    }, {
-        name: "Motörhead",
-        playcount: "194",
-    }, {
-        name: "Johann Sebastian Bach",
-        playcount: "191",
-    }, {
-        name: "Sparta",
-        playcount: "187",
-    }, {
-        name: "The Doors",
-        playcount: "187",
-    }, {
-        name: "Rage Against the Machine",
-        playcount: "186",
-    }, {
-        name: "Dub War",
-        playcount: "182",
-    }, {
-        name: "Archive",
-        playcount: "178",
-    }, {
-        name: "Portishead",
-        playcount: "177",
-    }, {
-        name: "The Offspring",
-        playcount: "177",
-    }, {
-        name: "Mogwai",
-        playcount: "172",
-    }, {
-        name: "Vast",
-        playcount: "169",
-    }, {
-        name: "Tocotronic",
-        playcount: "167",
-    }, {
-        name: "The Crystal Method",
-        playcount: "164",
-    }, {
-        name: "Apparat",
-        playcount: "160",
-    }, {
-        name: "Godsmack",
-        playcount: "155",
-    }];
 
     function renderWordCloud() {
 
-        function text(d, i) {
-            return d.name.toUpperCase();
-        }
+        d3.json('data.json', function (error, json) {
+            if (error) return console.warn(error);
+            var topArtists = json.topartists.artist;
 
-        function fontSize(d, i) {
-            return Math.sqrt(d.playcount) * 2;
-        }
+            function text(d, i) {
+                return d.name.toUpperCase();
+            }
 
-        function rotate(d, i) {
-            return (i % 2 == 1);
-        }
+            function fontSize(d, i) {
+                return Math.sqrt(d.playcount) * 2;
+            }
 
-        function marginH (d,i) {
-            return d.size / 2;
-        }
+            function rotate(d, i) {
+                return (i % 2 == 1);
+            }
 
-        function marginV (d,i) {
-            return d.size / 4;
-        }
+            function margin(d, i) {
+                return d.size / 4;
+            }
 
-        var fontFamily = '"Open Sans"';
-        //var fontFamily = '"Ubuntu Mono"';
+            var fontFamily = '"Open Sans"';
+            //var fontFamily = '"Ubuntu Mono"';
 
-        var fontWeight = 800;
-        //var fontWeight = 700;
+            var fontWeight = 800;
+            //var fontWeight = 700;
 
-        var wordcloud = new ddr_d3.layout.Wordcloud();
-        wordcloud
-                .text(text)
-                .fontSize(fontSize)
-                .fontWeight(fontWeight)
-                .fontFamily(fontFamily)
-                .marginH(marginH)
-                .marginV(marginV)
-                .ratio([1, 2])
-                .rotate(rotate)
-                .draw(draw)
-                .layout(topArtists);
+            var wordcloud = new ddr_d3.layout.Wordcloud();
+            wordcloud
+                    .text(text)
+                    .fontSize(fontSize)
+                    .fontWeight(fontWeight)
+                    .fontFamily(fontFamily)
+                    .margin(margin)
+                    .ratio([4,3])
+                    .rotate(rotate)
+                    .draw(draw)
+                    .layout(topArtists);
 
-        function draw(data) {
+            function draw(data) {
 
-            var sizeExtent = d3.extent(data, function(d) {return d.size});
+                var sizeExtent = d3.extent(data, function (d) {
+                    return d.size
+                });
 
-            var svgWidth = 400;
-            var svg = d3.select('#cloud').append('svg').attr('width', svgWidth);
-            var container = svg.append('g');
-            container.selectAll("text")
-                    .data(data)
-                    .enter().append("text")
-                    .attr("x", wordcloud.xPlacement())
-                    .attr("y", wordcloud.yPlacement())
-                    .style('font-family', wordcloud.familyAccessor())
-                    .style('font-size', function (d) {
-                        return d.size + 'px';
-                    })
-                    .style('font-weight', wordcloud.weightAccessor())
-                    .style('fill', function(d) {
-                        var val = 128 - (128 * ((d.size - sizeExtent[0]) / (sizeExtent[1] - sizeExtent[0])));
-                        return d3.rgb(val, val, val);
-                    })
-                    .attr('transform', function (d, i) {
-                        if (d.rotate) {
-                            return new ddr_d3.util.Transform().rotate(90, d.boundingBox.getCenter().getX(), d.boundingBox.getCenter().getY()).toString();
-                        }
-                    })
-                    .text(text);
+                var svgWidth = 800;
+                var svg = d3.select('#cloud').append('svg').attr('width', svgWidth);
+                var container = svg.append('g');
+                container.selectAll("text")
+                        .data(data)
+                        .enter().append("text")
+                        .attr("x", wordcloud.xPlacement())
+                        .attr("y", wordcloud.yPlacement())
+                        .style('font-family', wordcloud.familyAccessor())
+                        .style('font-size', function (d) {
+                            return d.size + 'px';
+                        })
+                        .style('font-weight', wordcloud.weightAccessor())
+                        .style('fill', function (d) {
+                            var val = 128 - (128 * ((d.size - sizeExtent[0]) / (sizeExtent[1] - sizeExtent[0])));
+                            return d3.rgb(val, val, val);
+                        })
+                        .attr('transform', function (d, i) {
+                            if (d.rotate) {
+                                return new ddr_d3.util.Transform().rotate(90, d.boundingBox.getCenter().getX(), d.boundingBox.getCenter().getY()).toString();
+                            }
+                        })
+                        .text(text);
 
-            /* Draw orignial bounding boxes */
-            /*var originalBB = container.append('g');
-             originalBB.selectAll("rect")
-             .data(data)
-             .enter().append("rect")
-             .attr("x", function(d) {
-             return d.originalBoundingBox.getX()
-             })
-             .attr("y", function(d) {
-             return d.originalBoundingBox.getY()
-             })
-             .attr("width", function(d) {
-             return d.originalBoundingBox.getWidth()
-             })
-             .attr("height", function(d) {
-             return d.originalBoundingBox.getHeight()
-             })
-             .style('fill', 'none')
-             .style('stroke', 'red');*/
+                /* Draw orignial bounding boxes */
+                /*var originalBB = container.append('g');
+                 originalBB.selectAll("rect")
+                 .data(data)
+                 .enter().append("rect")
+                 .attr("x", function(d) {
+                 return d.originalBoundingBox.getX()
+                 })
+                 .attr("y", function(d) {
+                 return d.originalBoundingBox.getY()
+                 })
+                 .attr("width", function(d) {
+                 return d.originalBoundingBox.getWidth()
+                 })
+                 .attr("height", function(d) {
+                 return d.originalBoundingBox.getHeight()
+                 })
+                 .style('fill', 'none')
+                 .style('stroke', 'red');*/
 
-            /* Draw bounding boxes */
-            /*var newBB = container.append('g');
-             newBB.selectAll("rect")
-             .data(data)
-             .enter().append("rect")
-             .attr("x", function(d) {
-             return d.boundingBox.getX()
-             })
-             .attr("y", function(d) {
-             return d.boundingBox.getY()
-             })
-             .attr("width", function(d) {
-             return d.boundingBox.getWidth()
-             })
-             .attr("height", function(d) {
-             return d.boundingBox.getHeight()
-             })
-             .style('fill', 'none')
-             .style('stroke', 'green');*/
+                /* Draw bounding boxes */
+                /*var newBB = container.append('g');
+                 newBB.selectAll("rect")
+                 .data(data)
+                 .enter().append("rect")
+                 .attr("x", function(d) {
+                 return d.boundingBox.getX()
+                 })
+                 .attr("y", function(d) {
+                 return d.boundingBox.getY()
+                 })
+                 .attr("width", function(d) {
+                 return d.boundingBox.getWidth()
+                 })
+                 .attr("height", function(d) {
+                 return d.boundingBox.getHeight()
+                 })
+                 .style('fill', 'none')
+                 .style('stroke', 'green');*/
 
-            /* Draw center */
-            /*container.append('circle')
-             .attr('cx', 0)
-             .attr('cy', 0)
-             .attr('r', 5)
-             .attr('stroke', 'red');*/
+                /* Draw center */
+                /*container.append('circle')
+                 .attr('cx', 0)
+                 .attr('cy', 0)
+                 .attr('r', 5)
+                 .attr('stroke', 'red')
+                 .attr('fill', 'none');*/
 
-            var containerBounds = container.node().getBBox();
-            svg.attr('viewBox', containerBounds.x + ' ' + containerBounds.y + ' ' + containerBounds.width + ' ' + containerBounds.height);
-            svg.attr('height', containerBounds.height * (svgWidth / containerBounds.width))
-        }
+                var containerBounds = container.node().getBBox();
+                svg.attr('viewBox', containerBounds.x + ' ' + containerBounds.y + ' ' + containerBounds.width + ' ' + containerBounds.height);
+                svg.attr('height', containerBounds.height * (svgWidth / containerBounds.width))
+            }
+        });
     }
 
     $(function () {

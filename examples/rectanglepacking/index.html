@@ -24,14 +24,22 @@
             })
         }
 
+        var minWidth = Number.MAX_VALUE;
+        var minHeight = Number.MAX_VALUE;
         data.sort(function(a,b) {
+            minWidth = Math.min(minWidth, a.rect.getWidth(), b.rect.getWidth());
+            minHeight = Math.min(minHeight, a.rect.getHeight(), b.rect.getHeight());
             return b.rect.getArea() - a.rect.getArea();
         });
 
         var packer = new ddr_d3.layout.RectanglePacker();
-        packer.getRectangle(function (d) {
-            return d.rect
-        }).pack(data);
+        packer.setMinWidth(minWidth).setMinHeight(minHeight);
+
+        for (i = 0; i < data.length; i++) {
+            rect = packer.findPosition(data[i].rect);
+            packer.place(rect);
+            data[i].rect = rect;
+        }
 
         var svg = d3.select('body').append('svg');
         var container = svg.append('g');

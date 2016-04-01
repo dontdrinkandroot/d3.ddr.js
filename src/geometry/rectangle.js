@@ -83,8 +83,22 @@ var ddr_d3_geometry_rectangle = function (xOrP1, yOrP2, width, height) {
         return _p1.getX();
     };
 
+    this.setX = function (x) {
+        var oldWidth = this.getWidth();
+        _p1.setX(x);
+        this.setWidth(oldWidth);
+        return this;
+    };
+
     this.getY = function () {
         return _p1.getY();
+    };
+
+    this.setY = function (y) {
+        var oldHeight = this.getHeight();
+        _p1.setY(y);
+        this.setHeight(oldHeight);
+        return this;
     };
 
     this.getLeftX = function () {
@@ -107,9 +121,19 @@ var ddr_d3_geometry_rectangle = function (xOrP1, yOrP2, width, height) {
         return _p2.getX() - _p1.getX();
     };
 
+    this.setWidth = function (width) {
+        _p2.setX(_p1.getX() + width);
+        return this;
+    };
+
     this.getHeight = function () {
         return _p2.getY() - _p1.getY();
-    }
+    };
+
+    this.setHeight = function (height) {
+        _p2.setY(_p1.getY() + height);
+        return this;
+    };
 };
 ddr_d3_geometry_rectangle.prototype.toString = function () {
     return '[Rectangle x1=' + this.getLeftX() + ',y1=' + this.getTopY() + ',x2=' + this.getRightX() + ',y2=' + this.getBottomY() + ',w=' + this.getWidth() + ',h=' + this.getHeight() + ']';
