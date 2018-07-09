@@ -1,11 +1,12 @@
 {
   "name": "ddr-d3",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Extensions for D3.js",
   "keywords": [
     "d3",
     "visualization"
   ],
+  "main": "ddr-d3.min.js",
   "license": "Apache-2",
   "author": {
     "name": "Philip Washington Sorst",
